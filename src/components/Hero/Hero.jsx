@@ -277,7 +277,7 @@ export default function Hero({ onGameStart }) {
           >
             <span style={{ color: '#FFD700' }}>AI/ML Developer</span>
             <span style={{ color: '#555', margin: '0 8px' }}>•</span>
-            <span style={{ color: '#39FF14' }}>Full Stack Builder</span>
+            <span style={{ color: '#39FF14' }}>Backend Dev</span>
             <span style={{ color: '#555', margin: '0 8px' }}>•</span>
             <span style={{ color: '#FF6B9D' }}>Problem Solver</span>
           </motion.div>

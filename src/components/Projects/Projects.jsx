@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { playMenuHover, playMenuSelect } from '../../utils/sounds';
 import PixelIcon from '../UI/PixelIcon';
+import RetroPopup from '../UI/RetroPopup';
 
 const PROJECTS = [
   {
@@ -12,8 +13,9 @@ const PROJECTS = [
     tech: ['Python', 'NLP', 'Flask', 'AI'],
     color: '#00FFFF',
     borderColor: '#00FFFF',
-    level: 'LVL 5',
-    xp: '+500 XP',
+    level: 'LVL 20',
+    xp: '+2006 XP',
+    image: '/Portfolio/projects/Yojana_search.JPG',
   },
   {
     id: 2,
@@ -23,8 +25,9 @@ const PROJECTS = [
     tech: ['Python', 'TensorFlow', 'GAN', 'Deep Learning'],
     color: '#9B59B6',
     borderColor: '#9B59B6',
-    level: 'LVL 8',
-    xp: '+800 XP',
+    level: 'LVL 20',
+    xp: '+2006 XP',
+    image: '/Portfolio/projects/Face_generator.JPG',
   },
   {
     id: 3,
@@ -34,8 +37,9 @@ const PROJECTS = [
     tech: ['Python', 'ML', 'API', 'NLP'],
     color: '#FF6B9D',
     borderColor: '#FF6B9D',
-    level: 'LVL 6',
-    xp: '+600 XP',
+    level: 'LVL 20',
+    xp: '+2006 XP',
+    image: '/Portfolio/projects/ArimAI.WEBP',
   },
   {
     id: 4,
@@ -45,13 +49,15 @@ const PROJECTS = [
     tech: ['Python', 'TensorFlow', 'CNN', 'Transfer Learning'],
     color: '#39FF14',
     borderColor: '#39FF14',
-    level: 'LVL 4',
-    xp: '+400 XP',
+    level: 'LVL 20',
+    xp: '+2006 XP',
+    image: '/Portfolio/projects/Oxford_flowers.AVIF',
   },
 ];
 
 function CartridgeCard({ project, index }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   return (
     <motion.div
@@ -90,26 +96,39 @@ function CartridgeCard({ project, index }) {
             border: `2px solid ${project.color}30`,
           }}
         >
-          {/* Decorative pixel grid */}
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(${project.color}15 1px, transparent 1px)`,
-            backgroundSize: '8px 8px',
-          }} />
+          {/* Show image */}
+          {project.image && (
+            <img
+              src={project.image}
+              alt={project.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+          
+          {/* Fallback grid when no image */}
+          {!project.image && (
+            <div className="absolute inset-0" style={{
+              backgroundImage: `radial-gradient(${project.color}15 1px, transparent 1px)`,
+              backgroundSize: '8px 8px',
+            }} />
+          )}
 
-          {/* Project icon using PixelIcon */}
-          <div className="relative z-10 text-center flex justify-center text-[36px]">
-            {project.id === 1 ? <PixelIcon name="search" size={48} /> :
-              project.id === 2 ? <PixelIcon name="image" size={48} /> :
-                project.id === 3 ? <PixelIcon name="robot" size={48} /> :
-                  <PixelIcon name="star" size={48} />}
-          </div>
+          {/* Project icon - only show if no image */}
+          {!project.image && (
+            <div className="relative z-10 text-center flex justify-center text-[36px]">
+              {project.id === 1 ? <PixelIcon name="search" size={48} /> :
+                project.id === 2 ? <PixelIcon name="image" size={48} /> :
+                  project.id === 3 ? <PixelIcon name="robot" size={48} /> :
+                    <PixelIcon name="star" size={48} />}
+            </div>
+          )}
 
           {/* Insert cartridge text on hover */}
           <AnimatePresence>
             {isHovered && (
               <motion.div
                 className="absolute inset-0 flex items-center justify-center"
-                style={{ background: `${project.color}20` }}
+                style={{ background: `${project.color}40`, zIndex: 10 }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -187,7 +206,16 @@ function CartridgeCard({ project, index }) {
         {/* Action Buttons */}
         <div className="flex gap-2">
           <button
-            onClick={() => playMenuSelect()}
+            onClick={() => {
+              playMenuSelect();
+              if (project.id === 1) {
+                window.open('https://drive.google.com/file/d/1Ty7ctoCpFRQLo_IOG8MIleYIWKUW3otJ/view?usp=sharing', '_blank');
+              } else if (project.id === 3) {
+                window.open('https://drive.google.com/file/d/1LAoZlFC4Vm0-yRD1IYYCJlZM_Kz5udyS/view?usp=sharing', '_blank');
+              } else if (project.id === 2 || project.id === 4) {
+                setShowPopup(true);
+              }
+            }}
             className="flex-1 py-2 cursor-pointer"
             style={{
               fontFamily: 'var(--font-pixel)',
@@ -235,6 +263,13 @@ function CartridgeCard({ project, index }) {
           ))}
         </div>
       </div>
+
+      {/* Retro Popup */}
+      <AnimatePresence>
+        {showPopup && (
+          <RetroPopup isOpen={showPopup} onClose={() => setShowPopup(false)} message="UNPLAYABLE" />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

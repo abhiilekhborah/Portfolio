@@ -13,7 +13,7 @@ const STATS = [
   { label: 'TEAMWORK', value: 82, color: '#FF6600' },
 ];
 
-const BIO_TEXT = `BTech CSE student with a passion for building impactful tools. Specializing in AI/ML and full-stack development, I love turning complex problems into elegant solutions. Currently leveling up in competitive programming and deep learning.`;
+const BIO_TEXT = `BTech CSE student with a passion for building impactful tools. Specializing in AI/ML and backend development, I love turning complex problems into elegant solutions. Currently leveling up in competitive programming and deep learning.`;
 
 function StatBar({ label, value, color, delay, animate }) {
   return (
@@ -128,7 +128,7 @@ export default function About() {
 
             {/* Class */}
             <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '9px', color: '#FF6B9D' }} className="mb-4">
-              FULL STACK MAGE
+              BACKEND DEV
             </div>
 
             {/* Level & XP */}
@@ -144,7 +144,7 @@ export default function About() {
               {[
                 { icon: 'book-open', text: 'BTech CSE Student', color: '#00FFFF' },
                 { icon: 'robot', text: 'AI/ML Enthusiast', color: '#9B59B6' },
-                { icon: 'monitor', text: 'Full-Stack Developer', color: '#39FF14' },
+                { icon: 'monitor', text: 'Backend Developer', color: '#39FF14' },
                 { icon: 'sword', text: 'Competitive Programmer', color: '#FF6B9D' },
                 { icon: 'tool-case', text: 'Tool Builder', color: '#FFD700' },
               ].map((item, i) => (
