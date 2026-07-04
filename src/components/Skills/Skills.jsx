@@ -4,9 +4,9 @@ import PixelIcon from '../UI/PixelIcon';
 
 const SKILL_CATEGORIES = [
   {
-    name: 'LANGUAGES',
+    name: 'LANGUAGE SPELLS',
     icon: 'terminal',
-    color: '#00FFFF',
+    color: 'var(--color-gold)',
     skills: [
       { name: 'Python', level: 90, icon: 'terminal' },
       { name: 'C++', level: 75, icon: 'zap' },
@@ -16,9 +16,9 @@ const SKILL_CATEGORIES = [
     ],
   },
   {
-    name: 'FRAMEWORKS & TOOLS',
+    name: 'EQUIPMENT & ARTIFACTS',
     icon: 'tool-case',
-    color: '#9B59B6',
+    color: 'var(--color-rust)',
     skills: [
       { name: 'TensorFlow', level: 82, icon: 'robot' },
       { name: 'Docker', level: 65, icon: 'box' },
@@ -28,9 +28,9 @@ const SKILL_CATEGORIES = [
     ],
   },
   {
-    name: 'DOMAINS',
+    name: 'KNOWLEDGE DOMAINS',
     icon: 'target',
-    color: '#FF6B9D',
+    color: 'var(--color-forest-light)',
     skills: [
       { name: 'Machine Learning', level: 85, icon: 'chart' },
       { name: 'Deep Learning', level: 80, icon: 'eye' },
@@ -43,25 +43,25 @@ const SKILL_CATEGORIES = [
 function SkillNode({ skill, color, index, animate }) {
   const maxBlocks = 10;
   const filledBlocks = Math.round((skill.level / 100) * maxBlocks);
-  const levelLabel = skill.level >= 85 ? 'MAX' : skill.level >= 70 ? 'PRO' : skill.level >= 50 ? 'ADV' : 'INT';
+  const levelLabel = skill.level >= 85 ? 'ELITE' : skill.level >= 70 ? 'ADEPT' : skill.level >= 50 ? 'INITIATE' : 'NOVICE';
 
   return (
     <motion.div
-      className="skill-node p-3"
+      className="skill-node p-3 bg-[rgba(30,22,48,0.85)] border-[rgba(107,90,62,0.3)]"
       initial={{ opacity: 0, scale: 0.8 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.3, delay: index * 0.08 }}
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: 1.05, borderColor: 'var(--color-gold)' }}
       style={{ '--skill-color': color }}
     >
       {/* Skill Icon & Name */}
       <div className="flex items-center gap-2 mb-2">
-        <span style={{ fontSize: '18px' }}><PixelIcon name={skill.icon} size={20} color={color} /></span>
-        <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '9px', color }}>{skill.name}</span>
+        <span style={{ fontSize: '18px' }}><PixelIcon name={skill.icon} size={18} color={color} /></span>
+        <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color }}>{skill.name}</span>
       </div>
 
-      {/* XP Bar with blocks */}
+      {/* XP Bar with wooden blocks */}
       <div className="flex items-center gap-1 mb-1">
         {[...Array(maxBlocks)].map((_, i) => (
           <motion.div
@@ -69,21 +69,21 @@ function SkillNode({ skill, color, index, animate }) {
             style={{
               width: '100%',
               height: '8px',
-              background: i < filledBlocks ? color : 'rgba(255,255,255,0.08)',
-              border: `1px solid ${i < filledBlocks ? color : 'rgba(255,255,255,0.1)'}`,
+              background: i < filledBlocks ? color : 'rgba(107,90,62,0.1)',
+              border: `1px solid ${i < filledBlocks ? color : 'rgba(107,90,62,0.2)'}`,
             }}
             initial={{ opacity: 0 }}
             animate={animate ? { opacity: 1 } : {}}
-            transition={{ delay: 0.5 + i * 0.05 }}
+            transition={{ delay: 0.3 + i * 0.05 }}
           />
         ))}
       </div>
 
       {/* Level label */}
       <div className="flex justify-between" style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px' }}>
-        <span style={{ color: '#888' }}>LV.{skill.level}</span>
+        <span style={{ color: 'var(--color-text-muted)' }}>LV.{skill.level}</span>
         <span style={{
-          color: levelLabel === 'MAX' ? '#FFD700' : levelLabel === 'PRO' ? '#39FF14' : color,
+          color: levelLabel === 'ELITE' ? 'var(--color-gold)' : levelLabel === 'ADEPT' ? 'var(--color-amber)' : color,
         }}>
           [{levelLabel}]
         </span>
@@ -105,19 +105,19 @@ export default function Skills() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <span style={{ color: '#39FF14' }}><PixelIcon name="star" size={24} /> </span>
-          <span style={{ color: '#00FFFF' }}>SKILL TREE</span>
-          <span style={{ color: '#39FF14' }}> <PixelIcon name="star" size={24} /></span>
+          <span style={{ color: 'var(--color-forest-light)' }}><PixelIcon name="star" size={24} color="var(--color-forest-light)" /> </span>
+          <span>SKILL INVENTORY</span>
+          <span style={{ color: 'var(--color-forest-light)' }}> <PixelIcon name="star" size={24} color="var(--color-forest-light)" /></span>
         </motion.div>
 
         <motion.div
           className="text-center mb-10"
-          style={{ fontFamily: 'var(--font-vt)', fontSize: '20px', color: '#888' }}
+          style={{ fontFamily: 'var(--font-vt)', fontSize: '20px', color: 'var(--color-text-muted)' }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          ABILITIES UNLOCKED THROUGH TRAINING & QUESTS
+          ABILITIES UNLOCKED THROUGH QUESTS & LABORS
         </motion.div>
 
         {/* Skill Categories */}
@@ -133,18 +133,18 @@ export default function Skills() {
               {/* Category Header */}
               <div
                 className="flex items-center gap-3 mb-5 pb-2"
-                style={{ borderBottom: `2px solid ${category.color}30` }}
+                style={{ borderBottom: `2px dashed ${category.color}40` }}
               >
-                <span style={{ fontSize: '20px' }}><PixelIcon name={category.icon} size={28} color={category.color} /></span>
+                <span style={{ fontSize: '20px' }}><PixelIcon name={category.icon} size={24} color={category.color} /></span>
                 <span style={{
                   fontFamily: 'var(--font-pixel)',
-                  fontSize: '12px',
+                  fontSize: '11px',
                   color: category.color,
-                  letterSpacing: '2px',
+                  letterSpacing: '1px',
                 }}>
                   {category.name}
                 </span>
-                <div className="flex-1 h-px" style={{ background: `linear-gradient(90deg, ${category.color}30, transparent)` }} />
+                <div className="flex-1 h-px" style={{ background: `linear-gradient(90deg, ${category.color}20, transparent)` }} />
               </div>
 
               {/* Skills Grid */}
@@ -165,23 +165,23 @@ export default function Skills() {
 
         {/* Total Skills Counter */}
         <motion.div
-          className="mt-10 text-center pixel-border p-4"
+          className="mt-10 text-center pixel-border p-4 bg-[rgba(30,22,48,0.85)] border-[rgba(107,90,62,0.3)]"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <div className="flex items-center justify-center gap-6 flex-wrap" style={{ fontFamily: 'var(--font-pixel)', fontSize: '9px' }}>
-            <span style={{ color: '#FFD700' }}>
-              SKILLS UNLOCKED: {SKILL_CATEGORIES.reduce((acc, cat) => acc + cat.skills.length, 0)}
+          <div className="flex items-center justify-center gap-6 flex-wrap" style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px' }}>
+            <span style={{ color: 'var(--color-gold)' }}>
+              SKILLS MASTERED: {SKILL_CATEGORIES.reduce((acc, cat) => acc + cat.skills.length, 0)}
             </span>
-            <span style={{ color: '#39FF14' }}>
-              AVG LEVEL: {Math.round(
+            <span style={{ color: 'var(--color-amber)' }}>
+              AVG PROFICIENCY: {Math.round(
                 SKILL_CATEGORIES.flatMap(c => c.skills).reduce((acc, s) => acc + s.level, 0) /
                 SKILL_CATEGORIES.flatMap(c => c.skills).length
-              )}
+              )}%
             </span>
-            <span style={{ color: '#FF6B9D' }}>
-              RANK: S
+            <span style={{ color: 'var(--color-forest-light)' }}>
+              ADVENTURE RANK: S
             </span>
           </div>
         </motion.div>

@@ -5,12 +5,12 @@ import { useMultiLineTypewriter } from '../../hooks/usePixelTypewriter';
 import PixelIcon from '../UI/PixelIcon';
 
 const BOOT_LINES = [
-  'BOOTING CONTACT.SYS...',
-  'LOADING PROTOCOLS...',
-  'INITIALIZING NETWORK INTERFACE...',
-  'CONNECTING TO ABHILEKH.EXE...',
+  'PREPARING INK & SCRIPT QUILL...',
+  'UNROLLING SCRIBE PARCHMENTS...',
+  'FEEDING THE CARRIER PIGEONS...',
+  'ESTABLISHING CONNECTION WITH THE SAGE...',
   'STATUS: ONLINE',
-  'READY.',
+  'READY TO RECEIVE MESSAGES.',
   '',
   '═══════════════════════════════════════',
   '',
@@ -18,38 +18,38 @@ const BOOT_LINES = [
 
 const CONTACT_LINKS = [
   {
-    command: 'EMAIL',
+    command: 'MAIL PIGEON',
     value: 'abhilekhborah428@email.com',
     href: 'mailto:abhilekhborah@email.com',
-    color: '#FFD700',
+    color: 'var(--color-gold)',
     icon: 'mail',
   },
   {
-    command: 'GITHUB',
+    command: 'GITHUB SCROLL',
     value: 'github.com/abhiilekhborah',
     href: 'https://github.com/abhilekhborah',
-    color: '#39FF14',
+    color: 'var(--color-forest-light)',
     icon: 'git-branch',
   },
   {
-    command: 'LINKEDIN',
+    command: 'LINKEDIN GUILD',
     value: 'linkedin.com/in/abhilekhborah',
     href: 'https://linkedin.com/in/abhilekhborah',
-    color: '#00FFFF',
+    color: 'var(--color-amber)',
     icon: 'briefcase',
   },
   {
-    command: 'LEETCODE',
+    command: 'LEETCODE TRIAL',
     value: 'leetcode.com/abhilekhborah',
     href: 'https://leetcode.com/abhiilekhborah',
-    color: '#FF6B9D',
+    color: 'var(--color-rust)',
     icon: 'sword',
   },
   {
-    command: 'CODEFORCES',
+    command: 'CODEFORCES TRIAL',
     value: 'codeforces.com/abhilekhborah',
     href: 'https://codeforces.com/profile/abhiilekhborah',
-    color: '#9B59B6',
+    color: 'var(--color-gold)',
     icon: 'flag',
   },
 ];
@@ -80,9 +80,9 @@ export default function Contact() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <span style={{ color: '#39FF14' }}><PixelIcon name="mail" size={24} /> </span>
-          <span style={{ color: '#00FFFF' }}>CONTACT TERMINAL</span>
-          <span style={{ color: '#39FF14' }}> <PixelIcon name="mail" size={24} /></span>
+          <span style={{ color: 'var(--color-gold)' }}><PixelIcon name="mail" size={24} color="var(--color-gold)" /> </span>
+          <span>MESSENGER STATION</span>
+          <span style={{ color: 'var(--color-gold)' }}> <PixelIcon name="mail" size={24} color="var(--color-gold)" /></span>
         </motion.div>
 
         <motion.div
@@ -92,44 +92,40 @@ export default function Contact() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          {/* Terminal Window */}
-          <div className="terminal">
-            {/* Terminal Header */}
+          {/* Scribe Board */}
+          <div className="dialogue-box p-6 md:p-8" style={{ background: '#f0e6d3', border: '5px solid #6b5a3e' }}>
+            {/* Header */}
             <div
               className="absolute top-0 left-0 right-0 px-4 py-2 flex items-center justify-between"
               style={{
-                borderBottom: '2px solid rgba(57, 255, 20, 0.3)',
-                background: 'rgba(57, 255, 20, 0.05)',
+                borderBottom: '2px dashed rgba(107, 90, 62, 0.4)',
               }}
             >
-              <div className="flex gap-2">
-                <div style={{ width: '8px', height: '8px', background: '#FF0044' }} />
-                <div style={{ width: '8px', height: '8px', background: '#FFD700' }} />
-                <div style={{ width: '8px', height: '8px', background: '#39FF14' }} />
+              <div className="flex gap-1.5 text-[#6b5a3e] font-pixel text-[8px]">
+                <span>✦</span>
               </div>
-              <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: '#39FF14' }}>
-                CONTACT.SYS v2.0
+              <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: '#3a2820' }}>
+                SCRIBE_POST.EXE
               </span>
               <div />
             </div>
 
-            {/* Terminal Content */}
+            {/* Board Content */}
             <div className="mt-8 space-y-0" style={{ minHeight: '350px' }}>
-              {/* Boot sequence */}
+              {/* Scribe sequence */}
               {displayLines.map((line, i) => (
                 <div key={i} className="terminal-line" style={{
                   fontSize: '18px',
-                  opacity: line === 'READY.' ? 1 : 0.7,
-                  color: line === 'STATUS: ONLINE' ? '#39FF14'
-                    : line === 'READY.' ? '#FFD700'
-                      : line.includes('═') ? '#00FFFF'
-                        : '#39FF14',
+                  color: line === 'STATUS: ONLINE' ? 'var(--color-forest-dark)'
+                    : line === 'READY TO RECEIVE MESSAGES.' ? 'var(--color-rust)'
+                      : line.includes('═') ? 'var(--color-panel-border)'
+                        : '#3a2820',
                 }}>
                   {line}
                 </div>
               ))}
 
-              {/* Contact Links */}
+              {/* Message Links */}
               {bootComplete && (
                 <motion.div
                   className="space-y-3 pt-2"
@@ -137,8 +133,8 @@ export default function Contact() {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="terminal-line" style={{ fontSize: '16px', color: '#888', marginBottom: '8px' }}>
-                    TYPE A COMMAND OR CLICK TO CONNECT:
+                  <div className="terminal-line" style={{ fontSize: '16px', color: '#6b5e4a', marginBottom: '8px' }}>
+                    SELECT A DESTINATION FOR YOUR MESSAGE PIGEON:
                   </div>
 
                   {CONTACT_LINKS.map((link, index) => (
@@ -147,43 +143,43 @@ export default function Contact() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block py-2 px-3 no-underline"
+                      className="block py-2.5 px-4 no-underline parchment"
                       style={{
                         fontFamily: 'var(--font-vt)',
                         fontSize: '20px',
-                        background: 'transparent',
-                        border: 'none',
-                        transition: 'background 0.1s',
+                        border: '2px solid rgba(107, 90, 62, 0.25)',
+                        transition: 'all 0.1s',
                         cursor: 'pointer',
                         display: 'block',
                       }}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.12 }}
+                      transition={{ delay: index * 0.1 }}
                       whileHover={{
-                        backgroundColor: 'rgba(57, 255, 20, 0.05)',
+                        backgroundColor: 'rgba(107, 90, 62, 0.08)',
+                        borderColor: link.color,
                         x: 4,
                       }}
                     >
-                      <span style={{ color: '#00FFFF' }}>{'>'} </span>
-                      <span style={{ color: link.color, fontFamily: 'var(--font-pixel)', fontSize: '11px' }}>
+                      <span style={{ color: 'var(--color-rust)' }}>{'>'} </span>
+                      <span style={{ color: '#3a2820', fontFamily: 'var(--font-pixel)', fontSize: '9px', fontWeight: 'bold' }}>
                         {link.command}
                       </span>
-                      <span style={{ color: '#555' }}> — </span>
-                      <span style={{ color: '#aaa' }}>{link.value}</span>
-                      <span className="ml-2 inline-flex items-center"><PixelIcon name={link.icon} size={20} color={link.color} /></span>
+                      <span style={{ color: '#8a7350' }}> — </span>
+                      <span style={{ color: '#5c3d2e' }}>{link.value}</span>
+                      <span className="ml-2.5 inline-flex items-center"><PixelIcon name={link.icon} size={16} color={link.color} /></span>
                     </motion.a>
                   ))}
 
-                  {/* Blinking cursor */}
+                  {/* Blinking quill cursor */}
                   <div className="pt-4 flex items-center gap-1">
-                    <span style={{ color: '#00FFFF', fontFamily: 'var(--font-vt)', fontSize: '20px' }}>{'>'}</span>
+                    <span style={{ color: 'var(--color-rust)', fontFamily: 'var(--font-vt)', fontSize: '20px' }}>{'>'}</span>
                     <span
                       className="animate-blink inline-block"
                       style={{
                         width: '10px',
                         height: '18px',
-                        background: '#39FF14',
+                        background: 'var(--color-rust)',
                         verticalAlign: 'middle',
                       }}
                     />
@@ -196,13 +192,13 @@ export default function Contact() {
           {/* Bottom message */}
           <motion.div
             className="text-center mt-6"
-            style={{ fontFamily: 'var(--font-pixel)', fontSize: '9px', color: '#555' }}
+            style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: 'var(--color-text-dim)' }}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 1 }}
           >
-            TRANSMISSION COMPLETE • PLAYER 1 AWAITING RESPONSE
+            TRANSMISSION COMPLETE • AWAITING NEXT QUEST
           </motion.div>
         </motion.div>
       </div>

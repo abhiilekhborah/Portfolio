@@ -3,13 +3,15 @@ import PixelBackground from './components/Background/PixelBackground';
 import Hero from './components/Hero/Hero';
 import GameMenu from './components/Menu/GameMenu';
 import About from './components/About/About';
+import CodingStats from './components/CodingStats/CodingStats';
 import Projects from './components/Projects/Projects';
 import Skills from './components/Skills/Skills';
 import Experience from './components/Experience/Experience';
 import Contact from './components/Contact/Contact';
 import CustomCursor from './components/UI/CustomCursor';
+import AdventureCharacter from './components/UI/AdventureCharacter';
 
-function SectionDivider({ color = '#00FFFF' }) {
+function SectionDivider({ color = 'var(--color-gold)' }) {
   return (
     <div className="flex items-center justify-center py-8 px-4" style={{ zIndex: 1, position: 'relative' }}>
       <div className="flex items-center gap-2 w-full max-w-3xl">
@@ -38,17 +40,17 @@ function Footer() {
       className="text-center py-8 relative"
       style={{
         zIndex: 1,
-        borderTop: '2px solid rgba(0, 255, 255, 0.1)',
-        background: 'rgba(0, 0, 0, 0.3)',
+        borderTop: '3px solid var(--color-panel-border)',
+        background: 'var(--color-panel-bg)',
       }}
     >
-      <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '10px', color: '#555', lineHeight: 2.2 }}>
+      <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '10px', color: 'var(--color-text-muted)', lineHeight: 2.2 }}>
         <div>
-          <span style={{ color: '#00FFFF' }}>DESIGNED & BUILT BY</span>
+          <span style={{ color: 'var(--color-gold)' }}>SCRIBED & CONSTRUCTED BY</span>
         </div>
-        <div style={{ color: '#FFD700' }}>ABHILEKH BORAH</div>
-        <div className="mt-2" style={{ fontSize: '8px', color: '#333' }}>
-          © 2025 • ALL RIGHTS RESERVED • GAME OVER
+        <div style={{ color: 'var(--color-cream)', fontWeight: 'bold' }}>ABHILEKH BORAH</div>
+        <div className="mt-2" style={{ fontSize: '8px', color: 'var(--color-text-dim)' }}>
+          © 2026 • ALL RIGHTS RESERVED • THE QUEST CONTINUES
         </div>
         <div className="mt-3 flex justify-center gap-1">
           {[...Array(20)].map((_, i) => (
@@ -57,8 +59,8 @@ function Footer() {
               style={{
                 width: '3px',
                 height: '3px',
-                background: i % 4 === 0 ? '#00FFFF' : i % 4 === 1 ? '#9B59B6' : i % 4 === 2 ? '#FF6B9D' : '#FFD700',
-                opacity: 0.3,
+                background: i % 4 === 0 ? 'var(--color-gold)' : i % 4 === 1 ? 'var(--color-forest-light)' : i % 4 === 2 ? 'var(--color-rust)' : 'var(--color-amber)',
+                opacity: 0.4,
               }}
             />
           ))}
@@ -86,11 +88,11 @@ export default function App() {
       {/* Pixel Background (Canvas) */}
       <PixelBackground />
 
-      {/* CRT Scanline Overlay */}
-      <div className="crt-overlay" />
-
       {/* Navigation Menu */}
       {gameStarted && <GameMenu />}
+
+      {/* Interactive Companion Character */}
+      {gameStarted && <AdventureCharacter />}
 
       {/* Main Content */}
       <main>
@@ -98,19 +100,22 @@ export default function App() {
         
         {gameStarted && (
           <>
-            <SectionDivider color="#00FFFF" />
+            <SectionDivider color="var(--color-gold)" />
             <About />
             
-            <SectionDivider color="#FF6B9D" />
+            <SectionDivider color="var(--color-rust)" />
+            <CodingStats />
+            
+            <SectionDivider color="var(--color-amber)" />
             <Projects />
             
-            <SectionDivider color="#39FF14" />
+            <SectionDivider color="var(--color-forest-light)" />
             <Skills />
             
-            <SectionDivider color="#FFD700" />
+            <SectionDivider color="var(--color-gold)" />
             <Experience />
             
-            <SectionDivider color="#9B59B6" />
+            <SectionDivider color="var(--color-rust)" />
             <Contact />
           </>
         )}

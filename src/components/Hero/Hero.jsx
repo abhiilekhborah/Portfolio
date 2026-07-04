@@ -1,45 +1,46 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { playCoinSound, playStartSound } from '../../utils/sounds';
 
-/* ===== Pixel Art Avatar (CSS grid) ===== */
-function PixelAvatar() {
-  // 16x16 pixel art character sprite
+/* ===== Pixel Art Adventurer Sprite (CSS grid) ===== */
+function PixelAdventurer() {
+  // 16x16 classic point-and-click adventurer character sprite
   const sprite = [
-    '..00CCCC00......',
-    '..0CCCCCC0......',
-    '..0FSSFSS0......',
-    '..0FFFFFF0......',
-    '..00FMMF00......',
-    '....0FF0........',
-    '..PPPPPPPP......',
-    '..PCPCPCPC......',
-    '..PPPPPPPP......',
-    '..PCPPPPCP......',
-    '..PPPPPPPP......',
-    '....PP.PP.......',
-    '....PP.PP.......',
-    '...0PP.PP0......',
-    '...00...00......',
-    '..BBB...BBB.....',
+    '....0000000.....',
+    '...0HHHHHHH0....',
+    '...0HHHHHHH0....',
+    '...0HFFHFFH0....',
+    '...0HFFFFFH0....',
+    '....0FSSSF0.....',
+    '....0FMMMF0.....',
+    '.....0FFF0......',
+    '....0CCCCCC0....',
+    '...0CRRRRRRC0...',
+    '..0CCRRRRRRCC0..',
+    '..0C.RRRRRR.C0..',
+    '....0RR..RR0....',
+    '....0RR..RR0....',
+    '...0BBB..BBB0...',
+    '...0000..0000...'
   ];
 
   const colorMap = {
-    'C': '#00FFFF',   // Cyan hair
+    'H': '#d4a655',   // Gold hair/hat
+    'C': '#2a4a35',   // Forest green cape/shoulders
     'F': '#FFD4A8',   // Face
-    'S': '#1a1a2e',   // Sunglasses
-    'M': '#FF6B9D',   // Mouth
-    'P': '#9B59B6',   // Purple shirt
-    'B': '#3a3a5c',   // Boots
-    '0': '#1a1a2e',   // Outline
+    'S': '#1a1d2e',   // Eyes
+    'M': '#c75b39',   // Mouth
+    'R': '#5c3d2e',   // Leather tunic/shirt
+    'B': '#3a2820',   // Wooden/leather boots
+    '0': '#120a06',   // Outline
     '.': 'transparent',
   };
 
   return (
     <motion.div
       className="inline-block"
-      animate={{ y: [0, -6, 0] }}
-      transition={{ duration: 2, repeat: Infinity, ease: 'steps(3)' }}
+      animate={{ y: [0, -4, 0] }}
+      transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
     >
       <div
         style={{
@@ -66,78 +67,35 @@ function PixelAvatar() {
   );
 }
 
-/* ===== HUD Elements ===== */
-function HUDElement({ label, value, color }) {
-  return (
-    <div className="flex items-center gap-2" style={{ fontFamily: 'var(--font-pixel)', fontSize: '10px' }}>
-      <span style={{ color }}>{label}</span>
-      <span className="text-white">{value}</span>
-    </div>
-  );
-}
-
-function PixelHeart({ filled }) {
-  return (
-    <span style={{ color: filled ? '#FF0044' : '#333', fontSize: '14px', fontFamily: 'var(--font-pixel)' }}>
-      ♥
-    </span>
-  );
-}
-
 /* ===== Main Hero Component ===== */
 export default function Hero({ onGameStart }) {
   const [showContent, setShowContent] = useState(false);
-  const [coinInserted, setCoinInserted] = useState(false);
-  const [score, setScore] = useState(0);
+  const [introClicked, setIntroClicked] = useState(false);
   const [showPressStart, setShowPressStart] = useState(false);
-  const scoreRef = useRef(null);
 
   useEffect(() => {
-    // Coin insert animation on load
-    const coinTimer = setTimeout(() => {
-      setCoinInserted(true);
+    // If they click, we start the loading immediately
+    if (introClicked) {
       playCoinSound();
-    }, 500);
+      const contentTimer = setTimeout(() => {
+        setShowContent(true);
+      }, 800);
 
-    const contentTimer = setTimeout(() => {
-      setShowContent(true);
-    }, 1800);
+      const startTimer = setTimeout(() => {
+        setShowPressStart(true);
+      }, 1600);
 
-    const startTimer = setTimeout(() => {
-      setShowPressStart(true);
-    }, 3000);
+      return () => {
+        clearTimeout(contentTimer);
+        clearTimeout(startTimer);
+      };
+    }
+  }, [introClicked]);
 
-    return () => {
-      clearTimeout(coinTimer);
-      clearTimeout(contentTimer);
-      clearTimeout(startTimer);
-    };
-  }, []);
-
-  // Score counter animation
-  useEffect(() => {
-    if (!showContent) return;
-    const target = 99999;
-    const duration = 2000;
-    const steps = 60;
-    const increment = target / steps;
-    let current = 0;
-    const interval = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        current = target;
-        clearInterval(interval);
-      }
-      setScore(Math.floor(current));
-    }, duration / steps);
-    return () => clearInterval(interval);
-  }, [showContent]);
-
-  const handlePressStart = () => {
+  const handleEmbark = () => {
     playStartSound();
     if (onGameStart) onGameStart();
     
-    // Give React a tick to render the rest of the page before scrolling
     setTimeout(() => {
       const aboutSection = document.getElementById('about');
       if (aboutSection) {
@@ -152,83 +110,26 @@ export default function Hero({ onGameStart }) {
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
       style={{ zIndex: 1 }}
     >
-      {/* Coin Insert Animation */}
+      {/* Intro Gatekeeper Overlay */}
       <AnimatePresence>
-        {!coinInserted && (
+        {!introClicked && (
           <motion.div
-            className="absolute inset-0 flex items-center justify-center z-30"
-            style={{ background: 'rgba(0,0,0,0.9)' }}
-            exit={{ opacity: 0, transition: { duration: 0.5, delay: 0.5 } }}
+            className="absolute inset-0 flex flex-col items-center justify-center z-30"
+            style={{ background: '#0f0b1e' }}
+            exit={{ opacity: 0, transition: { duration: 0.8 } }}
+            onClick={() => setIntroClicked(true)}
           >
             <motion.div
-              style={{ fontFamily: 'var(--font-pixel)', fontSize: 'clamp(12px, 3vw, 20px)' }}
-              className="text-yellow-retro animate-blink-soft"
+              style={{ fontFamily: 'var(--font-pixel)', fontSize: 'clamp(10px, 2.5vw, 16px)' }}
+              className="text-gold animate-blink-soft cursor-pointer text-center px-6 leading-relaxed"
             >
-              INSERT COIN ▼
+              [ CLICK TO EMBAK ON THE QUEST ]
+              <br />
+              <span className="mt-4 block font-vt text-[20px] text-amber">THE ADVENTURE BEGINS NOW</span>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Coin Drop */}
-      {coinInserted && (
-        <motion.div
-          className="absolute z-20"
-          style={{ top: '20%' }}
-          initial={{ y: -100, opacity: 0, rotateY: 0 }}
-          animate={{ y: 0, opacity: [0, 1, 1, 0], rotateY: 720 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
-        >
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-              border: '3px solid #CC8800',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: 'var(--font-pixel)',
-              fontSize: '12px',
-              color: '#8B4513',
-            }}
-          >
-            ¢
-          </div>
-        </motion.div>
-      )}
-
-      {/* HUD Top Bar */}
-      {showContent && (
-        <motion.div
-          className="absolute top-0 left-0 right-0 px-4 py-3 flex justify-between items-center"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-          style={{ 
-            background: 'rgba(0,0,0,0.6)', 
-            borderBottom: '2px solid rgba(0, 255, 255, 0.3)',
-            zIndex: 10,
-          }}
-        >
-          <div className="flex items-center gap-4">
-            <HUDElement label="SCORE" value={score.toString().padStart(6, '0')} color="#FFD700" />
-          </div>
-          <div className="flex items-center gap-1">
-            <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '10px', color: '#FF0044', marginRight: '4px' }}>
-              HP
-            </span>
-            <PixelHeart filled={true} />
-            <PixelHeart filled={true} />
-            <PixelHeart filled={true} />
-          </div>
-          <div className="flex items-center gap-4">
-            <HUDElement label="LVL" value="21" color="#39FF14" />
-            <HUDElement label="XP" value="8750" color="#9B59B6" />
-          </div>
-        </motion.div>
-      )}
 
       {/* Main Title Area */}
       {showContent && (
@@ -238,10 +139,10 @@ export default function Hero({ onGameStart }) {
             className="mb-8 flex justify-center"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.3, type: 'spring', stiffness: 200 }}
+            transition={{ duration: 0.5, delay: 0.1, type: 'spring', stiffness: 200 }}
           >
-            <div className="pixel-border p-4 inline-block">
-              <PixelAvatar />
+            <div className="pixel-border p-4 inline-block bg-[rgba(30,22,48,0.8)]">
+              <PixelAdventurer />
             </div>
           </motion.div>
 
@@ -253,14 +154,14 @@ export default function Hero({ onGameStart }) {
               letterSpacing: '4px',
               lineHeight: 1.6,
             }}
-            className="glow-cyan mb-4"
+            className="text-gold mb-4"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <span style={{ color: '#00FFFF' }}>ABHILEKH</span>
+            <span style={{ color: '#ffffff', textShadow: '0 0 10px rgba(255,255,255,0.2)' }}>ABHILEKH</span>
             <br />
-            <span style={{ color: '#FF6B9D' }}>BORAH</span>
+            <span className="text-gold">BORAH</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -273,56 +174,55 @@ export default function Hero({ onGameStart }) {
             className="mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
           >
-            <span style={{ color: '#FFD700' }}>AI/ML Developer</span>
-            <span style={{ color: '#555', margin: '0 8px' }}>•</span>
-            <span style={{ color: '#39FF14' }}>Backend Dev</span>
-            <span style={{ color: '#555', margin: '0 8px' }}>•</span>
-            <span style={{ color: '#FF6B9D' }}>Problem Solver</span>
+            <span className="text-amber">AI/ML Developer</span>
+            <span style={{ color: '#6b5e4a', margin: '0 8px' }}>•</span>
+            <span className="text-forest">Backend Dev</span>
+            <span style={{ color: '#6b5e4a', margin: '0 8px' }}>•</span>
+            <span className="text-gold">Competitive Programmer</span>
           </motion.div>
 
-          {/* XP Bar */}
+          {/* Progress / XP Scroll Style */}
           <motion.div
-            className="max-w-sm mx-auto mb-10"
+            className="max-w-sm mx-auto mb-10 parchment p-3 px-5 border border-[#6b5a3e] rounded"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
+            transition={{ delay: 0.8 }}
           >
             <div className="flex justify-between mb-1" style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px' }}>
-              <span style={{ color: '#9B59B6' }}>EXP</span>
-              <span style={{ color: '#9B59B6' }}>8750 / 10000</span>
+              <span className="text-amber">CHAPTER I: THE DEPARTURE</span>
+              <span className="text-gold">LVL 21</span>
             </div>
-            <div className="stat-bar-track">
+            <div className="stat-bar-track" style={{ height: '10px' }}>
               <motion.div
                 className="stat-bar-fill"
-                style={{ background: 'linear-gradient(90deg, #9B59B6, #FF6B9D)' }}
+                style={{ background: 'linear-gradient(90deg, var(--color-earth-light), var(--color-gold))' }}
                 initial={{ width: '0%' }}
-                animate={{ width: '87.5%' }}
-                transition={{ duration: 1.5, delay: 1.5, ease: 'linear' }}
+                animate={{ width: '85%' }}
+                transition={{ duration: 1.5, delay: 1.0, ease: 'linear' }}
               />
             </div>
           </motion.div>
 
-          {/* Press Start */}
+          {/* Press Start / Begin Quest */}
           {showPressStart && (
             <motion.button
-              onClick={handlePressStart}
-              className="animate-blink-soft cursor-pointer"
+              onClick={handleEmbark}
+              className="animate-blink-soft cursor-pointer pixel-border px-8 py-3 text-center"
               style={{
                 fontFamily: 'var(--font-pixel)',
                 fontSize: 'clamp(10px, 2vw, 14px)',
-                color: '#FFD700',
-                background: 'none',
-                border: 'none',
-                letterSpacing: '3px',
-                padding: '1rem 2rem',
+                color: '#000',
+                background: 'var(--color-gold)',
+                border: '4px solid var(--color-panel-border)',
+                letterSpacing: '2px',
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              whileHover={{ scale: 1.1, textShadow: '0 0 20px #FFD700' }}
+              whileHover={{ scale: 1.05, filter: 'brightness(1.2)' }}
             >
-              ▶ PRESS START ◀
+              BEGIN QUEST ▶
             </motion.button>
           )}
         </div>
@@ -334,10 +234,10 @@ export default function Hero({ onGameStart }) {
           className="absolute bottom-4 left-0 right-0 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.4 }}
-          transition={{ delay: 3.5 }}
-          style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: '#555' }}
+          transition={{ delay: 1.5 }}
+          style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: 'var(--color-text-dim)' }}
         >
-          © 2025 ABHILEKH BORAH • ALL RIGHTS RESERVED
+          © 2026 ABHILEKH BORAH • ALL RIGHTS RESERVED
         </motion.div>
       )}
     </section>

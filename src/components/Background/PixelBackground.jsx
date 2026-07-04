@@ -1,9 +1,12 @@
 import { useEffect, useRef } from 'react';
 
 const COLORS = {
-  stars: ['#FFFFFF', '#00FFFF', '#FFD700', '#FF6B9D', '#39FF14'],
-  particles: ['#00FFFF', '#9B59B6', '#FF6B9D', '#FFD700', '#39FF14'],
-  mountains: ['#0d0720', '#150b30', '#1a0e3d'],
+  stars: ['#FFE8A3', '#FFD700', '#FFA500', '#FFFFFF', '#FF8C00'],
+  fireflies: ['#FFE8A3', '#FFD700', '#ADFF2F', '#39FF14'],
+  // Deep warm twilight gradient elements
+  sky: ['#0f0b1e', '#16112d', '#2c1e4a', '#4e335f', '#8b516c'],
+  mountains: ['#16112d', '#241a3a', '#32224c'],
+  forest: ['#14241d', '#1d3528', '#2a4835'],
 };
 
 export default function PixelBackground() {
@@ -16,13 +19,11 @@ export default function PixelBackground() {
     let width, height;
     const isMobile = window.innerWidth < 768;
 
-    const starCount = isMobile ? 60 : 150;
-    const particleCount = isMobile ? 8 : 20;
+    const starCount = isMobile ? 40 : 100;
+    const fireflyCount = isMobile ? 12 : 30;
 
     const stars = [];
-    const particles = [];
-    let shootingStar = null;
-    let shootingTimer = 0;
+    const fireflies = [];
 
     function resize() {
       width = canvas.width = window.innerWidth;
@@ -34,96 +35,145 @@ export default function PixelBackground() {
       for (let i = 0; i < starCount; i++) {
         stars.push({
           x: Math.random() * width,
-          y: Math.random() * height,
-          size: Math.random() < 0.3 ? 2 : 1,
+          y: Math.random() * height * 0.7, // Keep stars in upper sky
+          size: Math.random() < 0.2 ? 3 : Math.random() < 0.5 ? 2 : 1,
           color: COLORS.stars[Math.floor(Math.random() * COLORS.stars.length)],
-          twinkleSpeed: 0.02 + Math.random() * 0.04,
+          twinkleSpeed: 0.01 + Math.random() * 0.03,
           twinklePhase: Math.random() * Math.PI * 2,
-          brightness: 0.5 + Math.random() * 0.5,
+          brightness: 0.3 + Math.random() * 0.7,
         });
       }
     }
 
-    function initParticles() {
-      particles.length = 0;
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(createParticle());
+    function initFireflies() {
+      fireflies.length = 0;
+      for (let i = 0; i < fireflyCount; i++) {
+        fireflies.push(createFirefly());
       }
     }
 
-    function createParticle() {
+    function createFirefly() {
       return {
         x: Math.random() * width,
-        y: height + Math.random() * 100,
-        size: 2 + Math.floor(Math.random() * 3),
-        color: COLORS.particles[Math.floor(Math.random() * COLORS.particles.length)],
-        speedY: -(0.3 + Math.random() * 0.7),
-        speedX: (Math.random() - 0.5) * 0.3,
-        opacity: 0.3 + Math.random() * 0.5,
-        life: 0,
-        maxLife: 300 + Math.random() * 400,
+        y: height * 0.5 + Math.random() * height * 0.5, // Spawn in lower half
+        size: 1.5 + Math.floor(Math.random() * 2),
+        color: COLORS.fireflies[Math.floor(Math.random() * COLORS.fireflies.length)],
+        angle: Math.random() * Math.PI * 2,
+        speed: 0.2 + Math.random() * 0.4,
+        driftSpeed: 0.01 + Math.random() * 0.02,
+        opacity: 0.2 + Math.random() * 0.7,
+        phase: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.02 + Math.random() * 0.03,
       };
     }
 
-    function drawMountains(scrollY) {
-      const layers = [
-        { y: height * 0.7, h: height * 0.35, color: COLORS.mountains[0], speed: 0.02, segments: 8 },
-        { y: height * 0.75, h: height * 0.3, color: COLORS.mountains[1], speed: 0.04, segments: 10 },
-        { y: height * 0.82, h: height * 0.22, color: COLORS.mountains[2], speed: 0.06, segments: 12 },
-      ];
+    // Draws custom pixelated trees on the hills
+    function drawPixelTree(x, y, scale, color) {
+      ctx.fillStyle = color;
+      const baseW = 12 * scale;
+      const baseH = 20 * scale;
 
-      layers.forEach(layer => {
-        ctx.fillStyle = layer.color;
-        ctx.beginPath();
-        const offset = scrollY * layer.speed;
-        ctx.moveTo(0, height);
+      // Trunk
+      ctx.fillRect(Math.floor(x - baseW/6), Math.floor(y - baseH/4), Math.floor(baseW/3), Math.floor(baseH/4));
+
+      // Leaves (layered triangles)
+      for (let i = 0; i < 3; i++) {
+        const layerW = baseW * (1 - i * 0.25);
+        const layerH = baseH * 0.4;
+        const layerY = y - baseH/4 - i * baseH * 0.25;
         
-        for (let x = 0; x <= width; x += Math.floor(width / layer.segments)) {
-          const peakHeight = layer.h * (0.3 + 0.7 * Math.abs(Math.sin((x + offset) * 0.003)));
-          const y = layer.y - peakHeight;
-          // Pixelate the mountain shape
-          ctx.lineTo(Math.floor(x / 4) * 4, Math.floor(y / 4) * 4);
-        }
-        ctx.lineTo(width, height);
+        ctx.beginPath();
+        ctx.moveTo(Math.floor(x), Math.floor(layerY - layerH));
+        ctx.lineTo(Math.floor(x - layerW/2), Math.floor(layerY));
+        ctx.lineTo(Math.floor(x + layerW/2), Math.floor(layerY));
         ctx.closePath();
         ctx.fill();
-      });
+      }
     }
 
-    function drawGrid() {
-      const gridY = height * 0.88;
-      const gridHeight = height - gridY;
-      
-      ctx.strokeStyle = 'rgba(155, 89, 182, 0.15)';
-      ctx.lineWidth = 1;
-      
-      // Horizontal lines with perspective
-      for (let i = 0; i < 8; i++) {
-        const y = gridY + (gridHeight * (i / 8));
-        const perspective = 1 - ((y - gridY) / gridHeight) * 0.5;
-        ctx.globalAlpha = perspective * 0.3;
-        ctx.beginPath();
-        ctx.moveTo(0, Math.floor(y));
-        ctx.lineTo(width, Math.floor(y));
-        ctx.stroke();
-      }
+    function drawLandscape(scrollY) {
+      // 1. Far Silhouette Mountains
+      const mY = height * 0.5;
+      const mH = height * 0.3;
+      const mOffset = scrollY * 0.05; // slow parallax
 
-      // Vertical lines
-      const spacing = 60;
-      for (let x = 0; x < width; x += spacing) {
-        ctx.globalAlpha = 0.15;
-        ctx.beginPath();
-        ctx.moveTo(Math.floor(x), gridY);
-        ctx.lineTo(Math.floor(x), height);
-        ctx.stroke();
+      ctx.fillStyle = COLORS.mountains[1];
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+      for (let x = 0; x <= width; x += 16) {
+        const peakHeight = mH * (0.35 + 0.65 * Math.abs(Math.sin((x + mOffset) * 0.0015) * Math.cos((x + mOffset) * 0.0008)));
+        const y = mY - peakHeight;
+        // Step size of 4 for pixelated block contour
+        ctx.lineTo(Math.floor(x / 6) * 6, Math.floor(y / 6) * 6);
       }
-      ctx.globalAlpha = 1;
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      ctx.fill();
+
+      // 2. Mid Hills (with scattered trees)
+      const hY = height * 0.62;
+      const hH = height * 0.25;
+      const hOffset = scrollY * 0.15; // mid parallax
+      const forestColor = COLORS.forest[1];
+
+      ctx.fillStyle = forestColor;
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+      const hillPoints = [];
+      for (let x = 0; x <= width + 24; x += 24) {
+        const peakHeight = hH * (0.4 + 0.6 * Math.abs(Math.sin((x + hOffset) * 0.002) + 0.5 * Math.cos((x + hOffset) * 0.004)));
+        const y = hY - peakHeight;
+        const px = Math.floor(x / 8) * 8;
+        const py = Math.floor(y / 8) * 8;
+        hillPoints.push({ x: px, y: py });
+        ctx.lineTo(px, py);
+      }
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      ctx.fill();
+
+      // Scattered trees on mid hills
+      ctx.fillStyle = COLORS.forest[0];
+      hillPoints.forEach((pt, index) => {
+        if (index % 3 === 0 && pt.x > 20 && pt.x < width - 20) {
+          drawPixelTree(pt.x, pt.y + 4, 1.2, COLORS.forest[0]);
+        }
+      });
+
+      // 3. Near Forest Layer
+      const nY = height * 0.78;
+      const nH = height * 0.18;
+      const nOffset = scrollY * 0.35; // fast parallax
+      const nearColor = COLORS.forest[0];
+
+      ctx.fillStyle = nearColor;
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+      const foregroundPoints = [];
+      for (let x = 0; x <= width + 32; x += 32) {
+        const peakHeight = nH * (0.5 + 0.5 * Math.sin((x + nOffset) * 0.004));
+        const y = nY - peakHeight;
+        const px = Math.floor(x / 10) * 10;
+        const py = Math.floor(y / 10) * 10;
+        foregroundPoints.push({ x: px, y: py });
+        ctx.lineTo(px, py);
+      }
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      ctx.fill();
+
+      // Foreground foliage & trees
+      foregroundPoints.forEach((pt, index) => {
+        if (index % 2 === 0 && pt.x > 30 && pt.x < width - 30) {
+          drawPixelTree(pt.x, pt.y + 6, 2.0, '#0c1712');
+        }
+      });
     }
 
     function drawStars(time) {
       stars.forEach(star => {
         const twinkle = Math.sin(time * star.twinkleSpeed + star.twinklePhase);
-        const alpha = star.brightness * (0.5 + 0.5 * twinkle);
+        const alpha = star.brightness * (0.4 + 0.6 * twinkle);
         ctx.fillStyle = star.color;
         ctx.globalAlpha = alpha;
         ctx.fillRect(
@@ -136,104 +186,67 @@ export default function PixelBackground() {
       ctx.globalAlpha = 1;
     }
 
-    function drawParticles() {
-      particles.forEach((p, i) => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-        p.life++;
+    function drawFireflies(time) {
+      fireflies.forEach((f, i) => {
+        // Drift movement
+        f.angle += f.driftSpeed;
+        f.x += Math.cos(f.angle) * f.speed;
+        f.y += Math.sin(f.angle + time * f.pulseSpeed) * f.speed * 0.8;
 
-        if (p.life > p.maxLife || p.y < -20) {
-          particles[i] = createParticle();
-          return;
-        }
+        // Wrap around boundaries
+        if (f.x < -10) f.x = width + 10;
+        if (f.x > width + 10) f.x = -10;
+        if (f.y < height * 0.4) f.y = height + 10;
+        if (f.y > height + 10) f.y = height * 0.4;
 
-        const fadeIn = Math.min(p.life / 30, 1);
-        const fadeOut = Math.max(1 - (p.life / p.maxLife), 0);
-        ctx.globalAlpha = p.opacity * fadeIn * fadeOut;
-        ctx.fillStyle = p.color;
+        // Pulsing glow
+        const pulse = Math.sin(time * f.pulseSpeed + f.phase);
+        const alpha = f.opacity * (0.3 + 0.7 * pulse);
+
+        // Drawing a pixelated firefly
+        ctx.fillStyle = f.color;
+        ctx.globalAlpha = alpha;
         ctx.fillRect(
-          Math.floor(p.x / 2) * 2,
-          Math.floor(p.y / 2) * 2,
-          p.size,
-          p.size
+          Math.floor(f.x / 2) * 2,
+          Math.floor(f.y / 2) * 2,
+          f.size,
+          f.size
         );
       });
       ctx.globalAlpha = 1;
     }
 
-    function drawShootingStar(time) {
-      shootingTimer++;
-      if (!shootingStar && shootingTimer > (isMobile ? 600 : 300) && Math.random() < 0.005) {
-        shootingStar = {
-          x: Math.random() * width * 0.8,
-          y: Math.random() * height * 0.3,
-          vx: 4 + Math.random() * 3,
-          vy: 2 + Math.random() * 2,
-          life: 0,
-          maxLife: 40 + Math.random() * 30,
-        };
-        shootingTimer = 0;
-      }
-
-      if (shootingStar) {
-        const s = shootingStar;
-        s.x += s.vx;
-        s.y += s.vy;
-        s.life++;
-
-        const fade = 1 - s.life / s.maxLife;
-        const tailLength = 6;
-
-        for (let i = 0; i < tailLength; i++) {
-          const t = i / tailLength;
-          ctx.globalAlpha = fade * (1 - t) * 0.8;
-          ctx.fillStyle = i === 0 ? '#FFFFFF' : '#00FFFF';
-          ctx.fillRect(
-            Math.floor((s.x - s.vx * i * 1.5) / 2) * 2,
-            Math.floor((s.y - s.vy * i * 1.5) / 2) * 2,
-            2,
-            2
-          );
-        }
-        ctx.globalAlpha = 1;
-
-        if (s.life > s.maxLife) {
-          shootingStar = null;
-        }
-      }
-    }
-
     function draw(time) {
       ctx.clearRect(0, 0, width, height);
 
-      // Background gradient
+      // Warm Twilight Sky Gradient
       const gradient = ctx.createLinearGradient(0, 0, 0, height);
-      gradient.addColorStop(0, '#050510');
-      gradient.addColorStop(0.4, '#0a0e27');
-      gradient.addColorStop(0.7, '#0d1b3e');
-      gradient.addColorStop(1, '#1a0533');
+      gradient.addColorStop(0, COLORS.sky[0]); // Deepest night
+      gradient.addColorStop(0.3, COLORS.sky[1]);
+      gradient.addColorStop(0.6, COLORS.sky[2]); // Purple twilight
+      gradient.addColorStop(0.85, COLORS.sky[3]); // Dusk lavender
+      gradient.addColorStop(1, COLORS.sky[4]); // Warm sunset rose
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
 
       const scrollY = window.scrollY;
 
-      drawStars(time * 0.001);
-      drawShootingStar(time);
-      drawMountains(scrollY);
-      drawGrid();
-      drawParticles();
+      drawStars(time * 0.05);
+      drawLandscape(scrollY);
+      drawFireflies(time * 0.05);
 
       animRef.current = requestAnimationFrame(draw);
     }
 
     resize();
     initStars();
-    initParticles();
+    initFireflies();
     animRef.current = requestAnimationFrame(draw);
 
     window.addEventListener('resize', () => {
       resize();
       initStars();
+      initFireflies();
     });
 
     return () => {

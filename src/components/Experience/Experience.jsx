@@ -8,49 +8,49 @@ const ACHIEVEMENTS = [
   {
     id: 1,
     title: 'ML/DL/GENAI WORKSHOP',
-    description: 'Completed intensive workshop on Machine Learning, Deep Learning, and Generative AI technologies.',
+    description: 'Completed intensive wizard training in Machine Learning, Deep Learning, and Generative AI technologies.',
     icon: 'robot',
     trophy: 'trophy',
     xp: '+1000 XP',
-    rarity: 'LEGENDARY',
-    rarityColor: '#FFD700',
-    borderColor: '#FFD700',
+    rarity: 'LEGENDARY ARTIFACT',
+    rarityColor: 'var(--color-gold)',
+    borderColor: 'var(--color-gold)',
     date: '2024',
   },
   {
     id: 2,
-    title: 'SOCIAL INTERNSHIP',
-    description: 'Gained real-world experience through social impact internship, applying technology for community benefit.',
+    title: 'SOCIAL IMPACT QUEST',
+    description: 'Applied technical skills for public welfare, engineering tools to benefit civic community structures.',
     icon: 'users',
     trophy: 'star',
     xp: '+750 XP',
-    rarity: 'EPIC',
-    rarityColor: '#9B59B6',
-    borderColor: '#9B59B6',
+    rarity: 'EPIC ARTIFACT',
+    rarityColor: 'var(--color-rust)',
+    borderColor: 'var(--color-rust)',
     date: '2024',
   },
   {
     id: 3,
     title: 'LEETCODE WARRIOR',
-    description: 'Consistently solving algorithmic challenges on LeetCode, building strong problem-solving foundations.',
+    description: 'Conquered hundreds of algorithmic challenges, refining problem-solving attributes daily.',
     icon: 'sword',
     trophy: 'shield',
     xp: '+500 XP',
-    rarity: 'RARE',
-    rarityColor: '#00FFFF',
-    borderColor: '#00FFFF',
+    rarity: 'RARE ARTIFACT',
+    rarityColor: 'var(--color-amber)',
+    borderColor: 'var(--color-amber)',
     date: 'ONGOING',
   },
   {
     id: 4,
     title: 'CODEFORCES COMPETITOR',
-    description: 'Active participant in competitive programming contests on Codeforces platform.',
+    description: 'Engaged in competitive algorithmic coding rounds, battle-testing mental limits in live matches.',
     icon: 'target',
     trophy: 'flag',
     xp: '+500 XP',
-    rarity: 'RARE',
-    rarityColor: '#39FF14',
-    borderColor: '#39FF14',
+    rarity: 'RARE ARTIFACT',
+    rarityColor: 'var(--color-forest-light)',
+    borderColor: 'var(--color-forest-light)',
     date: 'ONGOING',
   },
 ];
@@ -69,7 +69,7 @@ function AchievementCard({ achievement, index }) {
   return (
     <motion.div
       ref={cardRef}
-      className="achievement-badge p-5 relative overflow-hidden"
+      className="achievement-badge p-5 relative overflow-hidden bg-[rgba(30,22,48,0.85)] border-[rgba(107,90,62,0.3)]"
       style={{ borderColor: achievement.borderColor }}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -82,18 +82,18 @@ function AchievementCard({ achievement, index }) {
           <motion.div
             className="absolute top-0 left-0 right-0 text-center py-1"
             style={{
-              background: `linear-gradient(90deg, transparent, ${achievement.rarityColor}30, transparent)`,
-              borderBottom: `1px solid ${achievement.rarityColor}40`,
+              background: `linear-gradient(90deg, transparent, ${achievement.rarityColor}20, transparent)`,
+              borderBottom: `1px dashed ${achievement.rarityColor}30`,
               fontFamily: 'var(--font-pixel)',
               fontSize: '7px',
               color: achievement.rarityColor,
-              letterSpacing: '2px',
+              letterSpacing: '1px',
             }}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <PixelIcon name="trophy" size={12} className="mr-1 inline-block align-middle" /> ACHIEVEMENT UNLOCKED
+            <PixelIcon name="trophy" size={10} color={achievement.rarityColor} className="mr-1 inline-block align-middle" /> ARTIFACT DISCOVERED
           </motion.div>
         )}
       </AnimatePresence>
@@ -104,15 +104,15 @@ function AchievementCard({ achievement, index }) {
           <div className="flex items-center gap-3">
             <motion.span
               style={{ fontSize: '28px', color: achievement.rarityColor }}
-              animate={unlocked ? { rotate: [0, -10, 10, 0], scale: [1, 1.2, 1] } : {}}
+              animate={unlocked ? { rotate: [0, -10, 10, 0], scale: [1, 1.1, 1] } : {}}
               transition={{ duration: 0.5 }}
             >
-              <PixelIcon name={achievement.icon} size={32} color={achievement.rarityColor} />
+              <PixelIcon name={achievement.icon} size={28} color={achievement.rarityColor} />
             </motion.span>
             <div>
               <h3 style={{
                 fontFamily: 'var(--font-pixel)',
-                fontSize: '11px',
+                fontSize: '10px',
                 color: achievement.rarityColor,
                 lineHeight: 1.5,
               }}>
@@ -120,16 +120,16 @@ function AchievementCard({ achievement, index }) {
               </h3>
               <span style={{
                 fontFamily: 'var(--font-pixel)',
-                fontSize: '7px',
+                fontSize: '6px',
                 color: achievement.rarityColor,
-                opacity: 0.7,
+                opacity: 0.8,
               }}>
                 [{achievement.rarity}]
               </span>
             </div>
           </div>
           <span style={{ fontSize: '24px' }}>
-            <PixelIcon name={achievement.trophy} size={32} color={achievement.rarityColor} />
+            <PixelIcon name={achievement.trophy} size={28} color={achievement.rarityColor} />
           </span>
         </div>
 
@@ -137,7 +137,8 @@ function AchievementCard({ achievement, index }) {
         <p style={{
           fontFamily: 'var(--font-vt)',
           fontSize: '16px',
-          color: '#aaa',
+          color: 'var(--color-text-warm)',
+          opacity: 0.8,
           lineHeight: 1.5,
           marginBottom: '12px',
         }}>
@@ -147,17 +148,17 @@ function AchievementCard({ achievement, index }) {
         {/* XP & Date */}
         <div className="flex justify-between items-center" style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px' }}>
           <motion.span
-            style={{ color: '#39FF14' }}
-            animate={unlocked ? { scale: [1, 1.3, 1] } : {}}
+            style={{ color: 'var(--color-forest-light)' }}
+            animate={unlocked ? { scale: [1, 1.2, 1] } : {}}
             transition={{ duration: 0.3, delay: 0.5 }}
           >
             {achievement.xp}
           </motion.span>
-          <span style={{ color: '#888' }}>{achievement.date}</span>
+          <span style={{ color: 'var(--color-text-muted)' }}>{achievement.date}</span>
         </div>
 
-        {/* XP Bar */}
-        <div className="mt-2 stat-bar-track" style={{ height: '6px' }}>
+        {/* XP Bar Scroll */}
+        <div className="mt-2 stat-bar-track" style={{ height: '6px', border: '1px solid var(--color-panel-border)' }}>
           <motion.div
             className="stat-bar-fill"
             style={{ background: achievement.rarityColor, height: '100%' }}
@@ -182,19 +183,19 @@ export default function Experience() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <span style={{ color: '#FFD700' }}><PixelIcon name="trophy" size={24} /> </span>
-          <span style={{ color: '#00FFFF' }}>TROPHY ROOM</span>
-          <span style={{ color: '#FFD700' }}> <PixelIcon name="trophy" size={24} /></span>
+          <span style={{ color: 'var(--color-gold)' }}><PixelIcon name="trophy" size={24} color="var(--color-gold)" /> </span>
+          <span>TROPHY CHAMBER</span>
+          <span style={{ color: 'var(--color-gold)' }}> <PixelIcon name="trophy" size={24} color="var(--color-gold)" /></span>
         </motion.div>
 
         <motion.div
           className="text-center mb-10"
-          style={{ fontFamily: 'var(--font-vt)', fontSize: '20px', color: '#888' }}
+          style={{ fontFamily: 'var(--font-vt)', fontSize: '20px', color: 'var(--color-text-muted)' }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          QUESTS COMPLETED & BATTLES WON
+          ANCIENT ARTIFACTS COLLECTED & BATTLES WON
         </motion.div>
 
         {/* Achievements Grid */}
@@ -206,15 +207,15 @@ export default function Experience() {
 
         {/* Total XP Summary */}
         <motion.div
-          className="mt-10 text-center pixel-border-yellow p-4"
+          className="mt-10 text-center pixel-border p-4 bg-[rgba(30,22,48,0.85)] border-[rgba(107,90,62,0.3)]"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <div className="flex items-center justify-center gap-6 flex-wrap" style={{ fontFamily: 'var(--font-pixel)', fontSize: '9px' }}>
-            <span style={{ color: '#FFD700' }}>TOTAL XP: 2750</span>
-            <span style={{ color: '#FF6B9D' }}>ACHIEVEMENTS: {ACHIEVEMENTS.length}/{ACHIEVEMENTS.length + 3}</span>
-            <span style={{ color: '#39FF14' }}>RANK: ELITE</span>
+          <div className="flex items-center justify-center gap-6 flex-wrap" style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px' }}>
+            <span style={{ color: 'var(--color-gold)' }}>TOTAL INFLUENCE XP: 2750</span>
+            <span style={{ color: 'var(--color-rust)' }}>RELICS UNLOCKED: {ACHIEVEMENTS.length}/{ACHIEVEMENTS.length + 3}</span>
+            <span style={{ color: 'var(--color-forest-light)' }}>GUILD TIER: MASTER</span>
           </div>
         </motion.div>
       </div>
