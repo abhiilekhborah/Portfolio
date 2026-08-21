@@ -1,93 +1,41 @@
 import { motion } from 'framer-motion';
 import { useInView } from '../../hooks/useScrollSection';
-import PixelIcon from '../UI/PixelIcon';
+import { Cpu, Terminal, Wrench, Target } from 'lucide-react';
 
 const SKILL_CATEGORIES = [
   {
-    name: 'LANGUAGE SPELLS',
-    icon: 'terminal',
-    color: 'var(--color-gold)',
-    skills: [
-      { name: 'Python', level: 90, icon: 'terminal' },
-      { name: 'C++', level: 75, icon: 'zap' },
-      { name: 'Java', level: 70, icon: 'coffee' },
-      { name: 'HTML/CSS', level: 85, icon: 'globe' },
-      { name: 'SQL', level: 72, icon: 'database' },
-    ],
+    name: 'LANGUAGES',
+    icon: Terminal,
+    color: 'var(--color-neo-accent)',
+    bg: 'bg-neo-accent',
+    skills: ['Python', 'C++', 'Java', 'HTML/CSS', 'SQL'],
   },
   {
-    name: 'EQUIPMENT & ARTIFACTS',
-    icon: 'tool-case',
-    color: 'var(--color-rust)',
-    skills: [
-      { name: 'TensorFlow', level: 82, icon: 'robot' },
-      { name: 'Docker', level: 65, icon: 'box' },
-      { name: 'GitHub', level: 88, icon: 'git-branch' },
-      { name: 'Linux', level: 78, icon: 'terminal' },
-      { name: 'n8n', level: 60, icon: 'files' },
-    ],
+    name: 'TOOLS & FRAMEWORKS',
+    icon: Wrench,
+    color: 'var(--color-neo-secondary)',
+    bg: 'bg-neo-secondary',
+    skills: ['TensorFlow', 'Docker', 'GitHub', 'Linux', 'n8n'],
   },
   {
-    name: 'KNOWLEDGE DOMAINS',
-    icon: 'target',
-    color: 'var(--color-forest-light)',
-    skills: [
-      { name: 'Machine Learning', level: 85, icon: 'chart' },
-      { name: 'Deep Learning', level: 80, icon: 'eye' },
-      { name: 'Web Development', level: 82, icon: 'monitor' },
-      { name: 'Data Science', level: 75, icon: 'chart-bar-big' },
-    ],
+    name: 'DOMAINS',
+    icon: Target,
+    color: 'var(--color-neo-muted)',
+    bg: 'bg-neo-muted',
+    skills: ['Machine Learning', 'Deep Learning', 'Web Development', 'Data Science'],
   },
 ];
 
-function SkillNode({ skill, color, index, animate }) {
-  const maxBlocks = 10;
-  const filledBlocks = Math.round((skill.level / 100) * maxBlocks);
-  const levelLabel = skill.level >= 85 ? 'ELITE' : skill.level >= 70 ? 'ADEPT' : skill.level >= 50 ? 'INITIATE' : 'NOVICE';
-
+function SkillChip({ name, color, index }) {
   return (
     <motion.div
-      className="skill-node p-3 bg-[rgba(30,22,48,0.85)] border-[rgba(107,90,62,0.3)]"
-      initial={{ opacity: 0, scale: 0.8 }}
+      className="neo-card-sm p-3 flex items-center justify-center text-center"
+      initial={{ opacity: 0, scale: 0.9 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.3, delay: index * 0.08 }}
-      whileHover={{ scale: 1.05, borderColor: 'var(--color-gold)' }}
-      style={{ '--skill-color': color }}
+      transition={{ duration: 0.2, delay: index * 0.05 }}
     >
-      {/* Skill Icon & Name */}
-      <div className="flex items-center gap-2 mb-2">
-        <span style={{ fontSize: '18px' }}><PixelIcon name={skill.icon} size={18} color={color} /></span>
-        <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color }}>{skill.name}</span>
-      </div>
-
-      {/* XP Bar with wooden blocks */}
-      <div className="flex items-center gap-1 mb-1">
-        {[...Array(maxBlocks)].map((_, i) => (
-          <motion.div
-            key={i}
-            style={{
-              width: '100%',
-              height: '8px',
-              background: i < filledBlocks ? color : 'rgba(107,90,62,0.1)',
-              border: `1px solid ${i < filledBlocks ? color : 'rgba(107,90,62,0.2)'}`,
-            }}
-            initial={{ opacity: 0 }}
-            animate={animate ? { opacity: 1 } : {}}
-            transition={{ delay: 0.3 + i * 0.05 }}
-          />
-        ))}
-      </div>
-
-      {/* Level label */}
-      <div className="flex justify-between" style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px' }}>
-        <span style={{ color: 'var(--color-text-muted)' }}>LV.{skill.level}</span>
-        <span style={{
-          color: levelLabel === 'ELITE' ? 'var(--color-gold)' : levelLabel === 'ADEPT' ? 'var(--color-amber)' : color,
-        }}>
-          [{levelLabel}]
-        </span>
-      </div>
+      <span className="font-bold text-sm uppercase tracking-wider">{name}</span>
     </motion.div>
   );
 }
@@ -96,28 +44,22 @@ export default function Skills() {
   const [sectionRef, isInView] = useInView(0.1);
 
   return (
-    <section id="skills" ref={sectionRef} className="relative" style={{ zIndex: 1 }}>
+    <section id="skills" ref={sectionRef} className="relative bg-neo-secondary/15" style={{ zIndex: 1 }}>
       <div className="section-container">
-        {/* Section Title */}
+        {/* Section Header */}
         <motion.div
-          className="section-title"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          className="mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span style={{ color: 'var(--color-forest-light)' }}><PixelIcon name="star" size={24} color="var(--color-forest-light)" /> </span>
-          <span>SKILL INVENTORY</span>
-          <span style={{ color: 'var(--color-forest-light)' }}> <PixelIcon name="star" size={24} color="var(--color-forest-light)" /></span>
-        </motion.div>
-
-        <motion.div
-          className="text-center mb-10"
-          style={{ fontFamily: 'var(--font-vt)', fontSize: '20px', color: 'var(--color-text-muted)' }}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          ABILITIES UNLOCKED THROUGH QUESTS & LABORS
+          <div className="flex items-center gap-3 mb-2">
+            <div className="bg-neo-accent border-4 border-black p-2" style={{ boxShadow: '4px 4px 0px 0px #000' }}>
+              <Cpu size={20} strokeWidth={3} />
+            </div>
+            <h2 className="section-title mb-0">SKILLS</h2>
+          </div>
+          <p className="section-subtitle mb-0">TECHNOLOGIES I WORK WITH</p>
         </motion.div>
 
         {/* Skill Categories */}
@@ -128,34 +70,28 @@ export default function Skills() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: catIdx * 0.15 }}
+              transition={{ delay: catIdx * 0.1 }}
             >
               {/* Category Header */}
-              <div
-                className="flex items-center gap-3 mb-5 pb-2"
-                style={{ borderBottom: `2px dashed ${category.color}40` }}
-              >
-                <span style={{ fontSize: '20px' }}><PixelIcon name={category.icon} size={24} color={category.color} /></span>
-                <span style={{
-                  fontFamily: 'var(--font-pixel)',
-                  fontSize: '11px',
-                  color: category.color,
-                  letterSpacing: '1px',
-                }}>
-                  {category.name}
-                </span>
-                <div className="flex-1 h-px" style={{ background: `linear-gradient(90deg, ${category.color}20, transparent)` }} />
+              <div className="flex items-center gap-3 mb-5">
+                <div
+                  className={`${category.bg} border-4 border-black p-2`}
+                  style={{ boxShadow: '3px 3px 0px 0px #000' }}
+                >
+                  <category.icon size={16} strokeWidth={3} />
+                </div>
+                <span className="font-bold text-sm uppercase tracking-wider">{category.name}</span>
+                <div className="flex-1 h-1 bg-black" />
               </div>
 
               {/* Skills Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                 {category.skills.map((skill, idx) => (
-                  <SkillNode
-                    key={skill.name}
-                    skill={skill}
+                  <SkillChip
+                    key={skill}
+                    name={skill}
                     color={category.color}
                     index={catIdx * 5 + idx}
-                    animate={isInView}
                   />
                 ))}
               </div>
@@ -163,26 +99,23 @@ export default function Skills() {
           ))}
         </div>
 
-        {/* Total Skills Counter */}
+        {/* Summary */}
         <motion.div
-          className="mt-10 text-center pixel-border p-4 bg-[rgba(30,22,48,0.85)] border-[rgba(107,90,62,0.3)]"
+          className="mt-10 neo-card p-4"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <div className="flex items-center justify-center gap-6 flex-wrap" style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px' }}>
-            <span style={{ color: 'var(--color-gold)' }}>
-              SKILLS MASTERED: {SKILL_CATEGORIES.reduce((acc, cat) => acc + cat.skills.length, 0)}
+          <div className="flex items-center justify-center gap-8 flex-wrap font-bold text-xs uppercase tracking-wider">
+            <span>
+              {SKILL_CATEGORIES.reduce((acc, cat) => acc + cat.skills.length, 0)} TECHNOLOGIES
             </span>
-            <span style={{ color: 'var(--color-amber)' }}>
-              AVG PROFICIENCY: {Math.round(
-                SKILL_CATEGORIES.flatMap(c => c.skills).reduce((acc, s) => acc + s.level, 0) /
-                SKILL_CATEGORIES.flatMap(c => c.skills).length
-              )}%
+            <span className="text-neo-accent">•</span>
+            <span>
+              {SKILL_CATEGORIES.length} CATEGORIES
             </span>
-            <span style={{ color: 'var(--color-forest-light)' }}>
-              ADVENTURE RANK: S
-            </span>
+            <span className="text-neo-accent">•</span>
+            <span>ALWAYS LEARNING</span>
           </div>
         </motion.div>
       </div>

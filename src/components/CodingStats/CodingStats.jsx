@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from '../../hooks/useScrollSection';
-import { playMenuHover, playMenuSelect, playCoinSound } from '../../utils/sounds';
-import PixelIcon from '../UI/PixelIcon';
 
-// Default static fallback statistics matching user's profile
+import { BarChart3, Sword, Flag, ExternalLink, RefreshCw } from 'lucide-react';
+
 const FALLBACK_LC = {
   totalSolved: 842,
   easySolved: 500,
@@ -33,12 +32,12 @@ const FALLBACK_CF = {
 };
 
 const BOOT_LOGS = [
-  'CONTACTING ANCIENT SCRIBE ORACLES...',
-  'UNROLLING LEETCODE.SYS SCROLL RECORDS...',
-  'UNROLLING CODEFORCES.EXE API SCROLLS...',
-  'FETCHING REAL-TIME CONTEST RATINGS...',
-  'TRANSCRIBING DSA BATTLE RECORDS...',
-  'LOGBOOK SYNCHRONIZED. CHRONICLES LOADED.'
+  'CONNECTING TO LEETCODE API...',
+  'CONNECTING TO CODEFORCES API...',
+  'FETCHING CONTEST RATINGS...',
+  'PARSING SUBMISSION DATA...',
+  'COMPILING STATISTICS...',
+  'DATA SYNCHRONIZED.'
 ];
 
 export default function CodingStats() {
@@ -46,73 +45,43 @@ export default function CodingStats() {
   const [loading, setLoading] = useState(true);
   const [logIndex, setLogIndex] = useState(0);
   const [typedLogs, setTypedLogs] = useState([]);
-  
+
   const [lcData, setLcData] = useState(() => {
     try {
       const cached = sessionStorage.getItem('lc_stats');
       return cached ? JSON.parse(cached) : FALLBACK_LC;
-    } catch {
-      return FALLBACK_LC;
-    }
+    } catch { return FALLBACK_LC; }
   });
 
   const [cfData, setCfData] = useState(() => {
     try {
       const cached = sessionStorage.getItem('cf_stats');
       return cached ? JSON.parse(cached) : FALLBACK_CF;
-    } catch {
-      return FALLBACK_CF;
-    }
+    } catch { return FALLBACK_CF; }
   });
 
-  // Stats Caching using SessionStorage
   const fetchStats = async (force = false) => {
     if (!force) {
       const cachedLc = sessionStorage.getItem('lc_stats');
       const cachedCf = sessionStorage.getItem('cf_stats');
-      if (cachedLc && cachedCf) {
-        return;
-      }
+      if (cachedLc && cachedCf) return;
     }
-
     try {
-      // 1. Fetch LeetCode General Data
       const lcPromise = fetch('https://leetcode-api-faisalshohag.vercel.app/abhiilekhborah')
-        .then(res => {
-          if (!res.ok) throw new Error('LC fetch failed');
-          return res.json();
-        })
+        .then(res => { if (!res.ok) throw new Error(); return res.json(); })
         .catch(() => null);
-
-      // 2. Fetch LeetCode Contest Rating Data
       const lcContestPromise = fetch('https://alfa-leetcode-api.onrender.com/abhiilekhborah/contest')
-        .then(res => {
-          if (!res.ok) throw new Error('LC contest fetch failed');
-          return res.json();
-        })
+        .then(res => { if (!res.ok) throw new Error(); return res.json(); })
         .catch(() => null);
-
-      // 3. Fetch Codeforces Info
       const cfInfoPromise = fetch('https://codeforces.com/api/user.info?handles=abhiilekhborah')
-        .then(res => {
-          if (!res.ok) throw new Error('CF Info failed');
-          return res.json();
-        })
+        .then(res => { if (!res.ok) throw new Error(); return res.json(); })
         .catch(() => ({ status: 'FAILED' }));
-
-      // 4. Fetch Codeforces Status
       const cfStatusPromise = fetch('https://codeforces.com/api/user.status?handle=abhiilekhborah')
-        .then(res => {
-          if (!res.ok) throw new Error('CF Status failed');
-          return res.json();
-        })
+        .then(res => { if (!res.ok) throw new Error(); return res.json(); })
         .catch(() => ({ status: 'FAILED' }));
 
       const [lcResult, lcContestResult, cfInfoResult, cfStatusResult] = await Promise.all([
-        lcPromise,
-        lcContestPromise,
-        cfInfoPromise,
-        cfStatusPromise
+        lcPromise, lcContestPromise, cfInfoPromise, cfStatusPromise
       ]);
 
       if (lcResult || lcContestResult) {
@@ -137,67 +106,43 @@ export default function CodingStats() {
         sessionStorage.setItem('lc_stats', JSON.stringify(mergedLc));
       }
 
-      // Process Codeforces data if successful
       let cfSolved = FALLBACK_CF.solvedCount;
       let cfMaxRating = FALLBACK_CF.maxRating;
       let cfTotalSub = FALLBACK_CF.totalSubmissions;
       let cfContribution = FALLBACK_CF.contribution;
       let cfRank = FALLBACK_CF.rank;
 
-      if (cfInfoResult && cfInfoResult.status === 'OK' && cfInfoResult.result[0]) {
+      if (cfInfoResult?.status === 'OK' && cfInfoResult.result[0]) {
         const info = cfInfoResult.result[0];
         cfContribution = info.contribution ?? 0;
         cfRank = info.rank ? info.rank.toUpperCase() : 'UNRATED';
       }
-
-      if (cfStatusResult && cfStatusResult.status === 'OK' && cfStatusResult.result) {
+      if (cfStatusResult?.status === 'OK' && cfStatusResult.result) {
         const submissions = cfStatusResult.result;
         cfTotalSub = submissions.length;
-        
         const uniqueSolved = new Set();
         let maxRated = 0;
         submissions.forEach(sub => {
           if (sub.verdict === 'OK') {
-            const key = `${sub.problem.contestId}-${sub.problem.index}`;
-            uniqueSolved.add(key);
-            if (sub.problem.rating) {
-              maxRated = Math.max(maxRated, sub.problem.rating);
-            }
+            uniqueSolved.add(`${sub.problem.contestId}-${sub.problem.index}`);
+            if (sub.problem.rating) maxRated = Math.max(maxRated, sub.problem.rating);
           }
         });
-
-        if (uniqueSolved.size > 0) {
-          cfSolved = uniqueSolved.size;
-        }
-        if (maxRated > 0) {
-          cfMaxRating = maxRated;
-        }
+        if (uniqueSolved.size > 0) cfSolved = uniqueSolved.size;
+        if (maxRated > 0) cfMaxRating = maxRated;
       }
 
-      const formattedCf = {
-        handle: 'abhiilekhborah',
-        solvedCount: cfSolved,
-        totalSubmissions: cfTotalSub,
-        maxRating: cfMaxRating,
-        rank: cfRank,
-        contribution: cfContribution,
-      };
-
+      const formattedCf = { handle: 'abhiilekhborah', solvedCount: cfSolved, totalSubmissions: cfTotalSub, maxRating: cfMaxRating, rank: cfRank, contribution: cfContribution };
       setCfData(formattedCf);
       sessionStorage.setItem('cf_stats', JSON.stringify(formattedCf));
-
     } catch (e) {
-      console.warn('Real-time stats sync error. Using cached/fallback stats.', e);
+      console.warn('Stats sync error. Using fallback.', e);
     }
   };
 
-  // Triggers boot loader text when section enters view
   useEffect(() => {
     if (isInView && loading) {
-      setTimeout(() => {
-        fetchStats(false).catch(console.warn);
-      }, 0);
-      
+      setTimeout(() => fetchStats(false).catch(console.warn), 0);
       let currentLog = 0;
       const interval = setInterval(() => {
         if (currentLog < BOOT_LOGS.length) {
@@ -206,19 +151,15 @@ export default function CodingStats() {
           setLogIndex(currentLog);
         } else {
           clearInterval(interval);
-          setTimeout(() => {
-            setLoading(false);
-            playCoinSound();
-          }, 600);
+          setTimeout(() => { setLoading(false); }, 600);
         }
-      }, 350);
-
+      }, 280);
       return () => clearInterval(interval);
     }
   }, [isInView, loading]);
 
   const handleResync = () => {
-    playMenuSelect();
+
     setLoading(true);
     setTypedLogs([]);
     setLogIndex(0);
@@ -231,301 +172,207 @@ export default function CodingStats() {
           setLogIndex(currentLog);
         } else {
           clearInterval(interval);
-          setTimeout(() => {
-            setLoading(false);
-            playCoinSound();
-          }, 500);
+          setTimeout(() => { setLoading(false); }, 500);
         }
-      }, 250);
+      }, 200);
     });
   };
 
-  // Helper component to render progress bars
-  const renderStatBar = (label, current, total, color, percentage) => {
-    return (
-      <div className="mb-4">
-        <div className="flex justify-between mb-1" style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px' }}>
-          <span style={{ color }}>{label}</span>
-          <span style={{ color: 'var(--color-text-muted)' }}>{current} / {total}</span>
-        </div>
-        <div className="stat-bar-track" style={{ height: '14px', border: '2px solid var(--color-panel-border)' }}>
-          <motion.div
-            className="stat-bar-fill"
-            style={{ background: color, height: '100%' }}
-            initial={{ width: '0%' }}
-            animate={{ width: `${percentage}%` }}
-            transition={{ duration: 1.2, ease: 'linear' }}
-          />
-        </div>
+  const renderStatBar = (label, current, total, color, percentage) => (
+    <div className="mb-4">
+      <div className="flex justify-between mb-1">
+        <span className="font-bold text-xs uppercase tracking-wider">{label}</span>
+        <span className="font-bold text-xs">{current} / {total}</span>
       </div>
-    );
-  };
+      <div className="neo-stat-track">
+        <motion.div
+          className="neo-stat-fill"
+          style={{ background: color }}
+          initial={{ width: '0%' }}
+          animate={{ width: `${Math.min(percentage, 100)}%` }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+        />
+      </div>
+    </div>
+  );
 
   return (
-    <section id="stats" ref={sectionRef} className="relative" style={{ zIndex: 1 }}>
+    <section id="stats" ref={sectionRef} className="relative bg-neo-muted/20" style={{ zIndex: 1 }}>
       <div className="section-container">
-        {/* Section Title */}
+        {/* Section Header */}
         <motion.div
-          className="section-title"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          className="mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span style={{ color: 'var(--color-amber)' }}><PixelIcon name="gamepad" size={24} color="var(--color-amber)" /> </span>
-          <span>BATTLE STATS</span>
-          <span style={{ color: 'var(--color-amber)' }}> <PixelIcon name="gamepad" size={24} color="var(--color-amber)" /></span>
-        </motion.div>
-
-        <motion.div
-          className="text-center mb-10"
-          style={{ fontFamily: 'var(--font-vt)', fontSize: '20px', color: 'var(--color-text-muted)' }}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          LIVE DATA CHRONICLES FROM THE CODING GUILDS
+          <div className="flex items-center gap-3 mb-2">
+            <div className="bg-neo-secondary border-4 border-black p-2" style={{ boxShadow: '4px 4px 0px 0px #000' }}>
+              <BarChart3 size={20} strokeWidth={3} />
+            </div>
+            <h2 className="section-title mb-0">CODING STATS</h2>
+          </div>
+          <p className="section-subtitle mb-0">LIVE DATA FROM COMPETITIVE PLATFORMS</p>
         </motion.div>
 
         {loading ? (
-          /* Retro scroll scribe loader */
-          <div className="max-w-xl mx-auto dialogue-box p-6" style={{ background: '#f0e6d3', border: '4px solid #6b5a3e', minHeight: '260px' }}>
-            <div className="absolute top-0 left-0 right-0 px-4 py-2 flex items-center justify-between" style={{
-              borderBottom: '2px dashed rgba(107, 90, 62, 0.4)',
-            }}>
-              <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: '#3a2820' }}>SCRIBE_SCROLL.LOG</span>
-              <div className="flex gap-1 text-[#6b5a3e]">
-                <span className="font-pixel text-[8px]">✦</span>
-              </div>
+          /* Terminal-style loader */
+          <div className="max-w-xl mx-auto neo-card p-6 bg-black text-white" style={{ minHeight: '260px' }}>
+            <div className="flex items-center gap-2 mb-4 pb-3 border-b-2 border-white/20">
+              <div className="w-3 h-3 rounded-full bg-neo-accent border-2 border-white/30" />
+              <div className="w-3 h-3 rounded-full bg-neo-secondary border-2 border-white/30" />
+              <div className="w-3 h-3 rounded-full bg-neo-muted border-2 border-white/30" />
+              <span className="ml-2 font-bold text-xs uppercase tracking-wider text-white/50">STATS_SYNC.EXE</span>
             </div>
-
-            <div className="mt-8 font-vt text-[18px] text-[#3a2820] space-y-2">
+            <div className="space-y-2 font-medium text-sm">
               {typedLogs.map((log, index) => (
                 <div key={index} className="flex gap-2">
-                  <span style={{ color: 'var(--color-rust)' }}>{'>'}</span>
-                  <span>{log}</span>
+                  <span className="text-neo-accent">&gt;</span>
+                  <span className={log === 'DATA SYNCHRONIZED.' ? 'text-neo-secondary' : ''}>{log}</span>
                 </div>
               ))}
               {logIndex < BOOT_LOGS.length && (
                 <div className="flex items-center gap-1">
-                  <span style={{ color: 'var(--color-rust)' }}>{'>'}</span>
-                  <span className="w-2.5 h-4 bg-var(--color-rust) animate-blink" style={{ backgroundColor: 'var(--color-rust)' }} />
+                  <span className="text-neo-accent">&gt;</span>
+                  <span className="w-2 h-4 bg-neo-accent animate-blink-cursor" />
                 </div>
               )}
             </div>
           </div>
         ) : (
-          /* Loaded double logbook stats view */
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8">
-              {/* LeetCode Logbook */}
+              {/* LeetCode Card */}
               <motion.div
-                className="pixel-border-pink p-6 flex flex-col justify-between"
+                className="neo-card p-0 overflow-hidden"
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                onMouseEnter={() => playMenuHover()}
-                whileHover={{ y: -6, boxShadow: '0 0 20px rgba(199, 91, 57, 0.3)' }}
+                transition={{ duration: 0.4 }}
+
               >
-                <div>
-                  {/* Cabinet Header */}
-                  <div className="flex justify-between items-center mb-6 pb-2" style={{ borderBottom: '2px dashed rgba(199, 91, 57, 0.3)' }}>
-                    <div className="flex items-center gap-2">
-                      <PixelIcon name="sword" size={24} color="var(--color-rust)" />
-                      <span className="text-rust" style={{ fontFamily: 'var(--font-pixel)', fontSize: '11px', letterSpacing: '1px' }}>
-                        LEETCODE CHRONICLES
-                      </span>
-                    </div>
-                    <span className="animate-blink-soft" style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px', color: 'var(--color-forest-light)' }}>
-                      ● ACTIVE
-                    </span>
+                {/* Header */}
+                <div className="bg-neo-accent border-b-4 border-black p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sword size={20} strokeWidth={3} />
+                    <span className="font-bold text-sm uppercase tracking-wider">LEETCODE</span>
                   </div>
+                  <span className="neo-badge bg-neo-secondary text-xs">● LIVE</span>
+                </div>
 
-                  {/* High Level Stats */}
-                  <div className="grid grid-cols-2 gap-4 mb-5">
-                    <div className="p-3 bg-[rgba(199,91,57,0.05)] border border-[rgba(199,91,57,0.2)] text-center">
-                      <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px', color: 'var(--color-text-muted)' }}>GLOBAL RANK</div>
-                      <div className="text-rust mt-1 text-[24px] font-bold" style={{ fontFamily: 'var(--font-vt)' }}>
-                        #{lcData.ranking.toLocaleString()}
-                      </div>
+                <div className="p-6">
+                  {/* Top stats */}
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="bg-neo-bg border-4 border-black p-3 text-center" style={{ boxShadow: '4px 4px 0px 0px #000' }}>
+                      <div className="font-bold text-xs uppercase tracking-wider opacity-60">GLOBAL RANK</div>
+                      <div className="text-2xl font-bold mt-1">#{lcData.ranking.toLocaleString()}</div>
                     </div>
-                    <div className="p-3 bg-[rgba(199,91,57,0.05)] border border-[rgba(199,91,57,0.2)] text-center">
-                      <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px', color: 'var(--color-text-muted)' }}>TOTAL SOLVED</div>
-                      <div className="text-rust mt-1 text-[24px] font-bold" style={{ fontFamily: 'var(--font-vt)' }}>
-                        {lcData.totalSolved}
-                      </div>
+                    <div className="bg-neo-bg border-4 border-black p-3 text-center" style={{ boxShadow: '4px 4px 0px 0px #000' }}>
+                      <div className="font-bold text-xs uppercase tracking-wider opacity-60">TOTAL SOLVED</div>
+                      <div className="text-2xl font-bold mt-1">{lcData.totalSolved}</div>
                     </div>
                   </div>
 
-                  {/* LeetCode Contest Ranking Details */}
-                  <div className="space-y-2 mb-5 font-vt text-[16px]">
-                    <div className="flex justify-between items-center p-3 border border-dashed border-[rgba(199,91,57,0.2)] bg-[rgba(199,91,57,0.02)]">
-                      <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: 'var(--color-rust)' }}>CONTEST RATING</span>
-                      <span className="text-[22px] font-bold" style={{ color: 'var(--color-amber)' }}>
-                        {Math.round(lcData.contestRating)}
-                      </span>
+                  {/* Contest info */}
+                  <div className="space-y-2 mb-6">
+                    <div className="flex justify-between items-center p-3 border-4 border-black bg-neo-bg">
+                      <span className="font-bold text-xs uppercase tracking-wider">CONTEST RATING</span>
+                      <span className="text-xl font-bold text-neo-accent">{Math.round(lcData.contestRating)}</span>
                     </div>
-                    <div className="flex justify-between items-center p-3 border border-dashed border-[rgba(199,91,57,0.2)] bg-[rgba(199,91,57,0.02)]">
-                      <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: 'var(--color-rust)' }}>PERCENTILE STATUS</span>
-                      <span className="text-[20px] font-bold" style={{ color: 'var(--color-forest-light)' }}>
-                        TOP {lcData.contestTopPercentage}%
-                      </span>
+                    <div className="flex justify-between items-center p-3 border-4 border-black bg-neo-bg">
+                      <span className="font-bold text-xs uppercase tracking-wider">PERCENTILE</span>
+                      <span className="text-xl font-bold">TOP {lcData.contestTopPercentage}%</span>
                     </div>
                   </div>
 
-                  {/* Difficulty Progress Bars */}
-                  <div className="space-y-2">
-                    {renderStatBar(
-                      'EASY LABORS',
-                      lcData.easySolved,
-                      lcData.totalEasy,
-                      'var(--color-forest-light)',
-                      (lcData.easySolved / lcData.totalEasy) * 100
-                    )}
-                    {renderStatBar(
-                      'MEDIUM TRIALS',
-                      lcData.mediumSolved,
-                      lcData.totalMedium,
-                      'var(--color-gold)',
-                      (lcData.mediumSolved / lcData.totalMedium) * 100
-                    )}
-                    {renderStatBar(
-                      'HARD QUESTS',
-                      lcData.hardSolved,
-                      lcData.totalHard,
-                      'var(--color-rust)',
-                      (lcData.hardSolved / lcData.totalHard) * 100
-                    )}
-                  </div>
+                  {/* Difficulty bars */}
+                  {renderStatBar('EASY', lcData.easySolved, lcData.totalEasy, 'var(--color-neo-secondary)', (lcData.easySolved / lcData.totalEasy) * 100)}
+                  {renderStatBar('MEDIUM', lcData.mediumSolved, lcData.totalMedium, 'var(--color-neo-muted)', (lcData.mediumSolved / lcData.totalMedium) * 100)}
+                  {renderStatBar('HARD', lcData.hardSolved, lcData.totalHard, 'var(--color-neo-accent)', (lcData.hardSolved / lcData.totalHard) * 100)}
 
                   {/* Sub stats */}
-                  <div className="mt-4 flex justify-between px-1" style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px', color: 'var(--color-text-dim)' }}>
+                  <div className="mt-4 flex justify-between font-bold text-xs uppercase tracking-wider opacity-50">
                     <span>REPUTATION: {lcData.reputation}</span>
                     <span>CONTESTS: {lcData.contestAttend}</span>
                   </div>
                 </div>
 
-                {/* Profile Link Button */}
+                {/* Profile link button */}
                 <button
-                  onClick={() => { playMenuSelect(); window.open('https://leetcode.com/u/abhiilekhborah/', '_blank'); }}
-                  className="mt-6 w-full py-2.5 cursor-pointer text-center"
-                  style={{
-                    fontFamily: 'var(--font-pixel)',
-                    fontSize: '8px',
-                    color: '#000',
-                    background: 'var(--color-rust)',
-                    border: 'none',
-                    transition: 'all 0.1s',
-                  }}
-                  onMouseEnter={(e) => e.target.style.filter = 'brightness(1.2)'}
-                  onMouseLeave={(e) => e.target.style.filter = 'none'}
+                  onClick={() => window.open('https://leetcode.com/u/abhiilekhborah/', '_blank')}
+                  className="w-full neo-btn neo-btn-dark border-t-4 border-l-0 border-r-0 border-b-0 border-black flex items-center justify-center gap-2"
+                  style={{ boxShadow: 'none' }}
                 >
-                  EXAMINE SCROLL ▶
+                  VIEW PROFILE <ExternalLink size={14} strokeWidth={3} />
                 </button>
               </motion.div>
 
-              {/* Codeforces Logbook */}
+              {/* Codeforces Card */}
               <motion.div
-                className="pixel-border p-6 flex flex-col justify-between"
-                style={{ borderColor: 'var(--color-panel-border)', background: 'var(--color-panel-bg)' }}
+                className="neo-card p-0 overflow-hidden"
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                onMouseEnter={() => playMenuHover()}
-                whileHover={{ y: -6, boxShadow: '0 0 20px rgba(107, 90, 62, 0.4)' }}
+                transition={{ duration: 0.4 }}
+
               >
-                <div>
-                  {/* Cabinet Header */}
-                  <div className="flex justify-between items-center mb-6 pb-2" style={{ borderBottom: '2px dashed rgba(107, 90, 62, 0.4)' }}>
-                    <div className="flex items-center gap-2">
-                      <PixelIcon name="flag" size={24} color="var(--color-gold)" />
-                      <span className="text-gold" style={{ fontFamily: 'var(--font-pixel)', fontSize: '11px', letterSpacing: '1px' }}>
-                        CODEFORCES CHRONICLES
-                      </span>
-                    </div>
-                    <span className="animate-blink-soft" style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px', color: 'var(--color-forest-light)' }}>
-                      ● ACTIVE
-                    </span>
+                {/* Header */}
+                <div className="bg-neo-secondary border-b-4 border-black p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Flag size={20} strokeWidth={3} />
+                    <span className="font-bold text-sm uppercase tracking-wider">CODEFORCES</span>
                   </div>
+                  <span className="neo-badge bg-neo-accent text-xs">● LIVE</span>
+                </div>
 
-                  {/* High Level Stats */}
+                <div className="p-6">
+                  {/* Top stats */}
                   <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="p-3 bg-[rgba(212,166,85,0.05)] border border-[rgba(212,166,85,0.2)] text-center">
-                      <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px', color: 'var(--color-text-muted)' }}>SOLVED QUESTS</div>
-                      <div className="text-gold mt-1 text-[24px] font-bold" style={{ fontFamily: 'var(--font-vt)' }}>
-                        {cfData.solvedCount}
-                      </div>
+                    <div className="bg-neo-bg border-4 border-black p-3 text-center" style={{ boxShadow: '4px 4px 0px 0px #000' }}>
+                      <div className="font-bold text-xs uppercase tracking-wider opacity-60">PROBLEMS SOLVED</div>
+                      <div className="text-2xl font-bold mt-1">{cfData.solvedCount}</div>
                     </div>
-                    <div className="p-3 bg-[rgba(212,166,85,0.05)] border border-[rgba(212,166,85,0.2)] text-center">
-                      <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px', color: 'var(--color-text-muted)' }}>TOTAL SUBMISSIONS</div>
-                      <div className="text-gold mt-1 text-[24px] font-bold" style={{ fontFamily: 'var(--font-vt)' }}>
-                        {cfData.totalSubmissions}
-                      </div>
+                    <div className="bg-neo-bg border-4 border-black p-3 text-center" style={{ boxShadow: '4px 4px 0px 0px #000' }}>
+                      <div className="font-bold text-xs uppercase tracking-wider opacity-60">SUBMISSIONS</div>
+                      <div className="text-2xl font-bold mt-1">{cfData.totalSubmissions}</div>
                     </div>
                   </div>
 
-                  {/* Custom CF metrics */}
-                  <div className="space-y-4 font-vt text-[18px] text-[#aaa]">
-                    <div className="flex justify-between items-center p-3 border border-dashed border-[rgba(107,90,62,0.2)] bg-[rgba(107,90,62,0.02)]">
-                      <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: 'var(--color-text-muted)' }}>MAX SOLVED LEVEL</span>
-                      <span className="text-[22px] font-bold" style={{ color: 'var(--color-forest-light)' }}>
-                        {cfData.maxRating}
-                      </span>
+                  {/* CF Metrics */}
+                  <div className="space-y-2 mb-6">
+                    <div className="flex justify-between items-center p-3 border-4 border-black bg-neo-bg">
+                      <span className="font-bold text-xs uppercase tracking-wider">MAX PROBLEM RATING</span>
+                      <span className="text-xl font-bold text-neo-secondary">{cfData.maxRating}</span>
                     </div>
-
-                    <div className="flex justify-between items-center p-3 border border-dashed border-[rgba(107,90,62,0.2)] bg-[rgba(107,90,62,0.02)]">
-                      <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: 'var(--color-text-muted)' }}>GUILD RANK STATUS</span>
-                      <span className="text-[20px] font-bold" style={{ color: cfData.rank === 'UNRATED' ? 'var(--color-text-dim)' : 'var(--color-gold)' }}>
-                        {cfData.rank}
-                      </span>
+                    <div className="flex justify-between items-center p-3 border-4 border-black bg-neo-bg">
+                      <span className="font-bold text-xs uppercase tracking-wider">RANK</span>
+                      <span className="text-xl font-bold">{cfData.rank}</span>
                     </div>
-
-                    <div className="flex justify-between items-center p-3 border border-dashed border-[rgba(107,90,62,0.2)] bg-[rgba(107,90,62,0.02)]">
-                      <span style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', color: 'var(--color-text-muted)' }}>INFLUENCE POINT</span>
-                      <span className="text-[20px] font-bold" style={{ color: 'var(--color-amber)' }}>
-                        {cfData.contribution >= 0 ? `+${cfData.contribution}` : cfData.contribution}
-                      </span>
+                    <div className="flex justify-between items-center p-3 border-4 border-black bg-neo-bg">
+                      <span className="font-bold text-xs uppercase tracking-wider">CONTRIBUTION</span>
+                      <span className="text-xl font-bold">{cfData.contribution >= 0 ? `+${cfData.contribution}` : cfData.contribution}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Profile Link Button */}
+                {/* Profile link button */}
                 <button
-                  onClick={() => { playMenuSelect(); window.open('https://codeforces.com/profile/abhiilekhborah', '_blank'); }}
-                  className="mt-6 w-full py-2.5 cursor-pointer text-center"
-                  style={{
-                    fontFamily: 'var(--font-pixel)',
-                    fontSize: '8px',
-                    color: '#000',
-                    background: 'var(--color-gold)',
-                    border: 'none',
-                    transition: 'all 0.1s',
-                  }}
-                  onMouseEnter={(e) => e.target.style.filter = 'brightness(1.2)'}
-                  onMouseLeave={(e) => e.target.style.filter = 'none'}
+                  onClick={() => window.open('https://codeforces.com/profile/abhiilekhborah', '_blank')}
+                  className="w-full neo-btn neo-btn-dark border-t-4 border-l-0 border-r-0 border-b-0 border-black flex items-center justify-center gap-2"
+                  style={{ boxShadow: 'none' }}
                 >
-                  EXAMINE SCROLL ▶
+                  VIEW PROFILE <ExternalLink size={14} strokeWidth={3} />
                 </button>
               </motion.div>
             </div>
 
-            {/* Sync Controls */}
+            {/* Resync Button */}
             <div className="mt-8 flex justify-center">
               <button
                 onClick={handleResync}
-                className="pixel-border px-5 py-3 cursor-pointer text-center flex items-center gap-2"
-                style={{
-                  fontFamily: 'var(--font-pixel)',
-                  fontSize: '8px',
-                  color: 'var(--color-gold)',
-                  border: '3px solid var(--color-gold)',
-                  background: 'rgba(30, 22, 48, 0.85)',
-                  transition: 'transform 0.1s',
-                }}
-                onMouseEnter={(e) => { e.target.style.background = 'rgba(212, 166, 85, 0.08)'; playMenuHover(); }}
-                onMouseLeave={(e) => { e.target.style.background = 'rgba(30, 22, 48, 0.85)'; }}
+                className="neo-btn neo-btn-outline flex items-center gap-2"
+
               >
-                <PixelIcon name="reload" size={14} color="var(--color-gold)" />
-                SYNC DATA RECORD
+                <RefreshCw size={14} strokeWidth={3} />
+                SYNC DATA
               </button>
             </div>
           </div>
