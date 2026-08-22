@@ -60,7 +60,7 @@ export default function Navbar() {
                   <span>AB</span>
                 </button>
 
-                {/* Nav Links */}
+                 {/* Nav Links */}
                 <div className="flex items-center gap-1">
                   {NAV_ITEMS.map((item) => (
                     <button
@@ -76,6 +76,19 @@ export default function Navbar() {
                       {item.label}
                     </button>
                   ))}
+
+                  {/* Try Coding Button */}
+                  <a
+                    href="#/compiler"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-4 flex items-center gap-1.5 bg-neo-accent border-4 border-black px-3.5 py-2 font-bold text-xs uppercase tracking-wider no-underline transition-all duration-100"
+                    style={{
+                      boxShadow: '3px 3px 0px 0px #000',
+                    }}
+                  >
+                    <span>TRY CODING ⚡</span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -129,6 +142,23 @@ export default function Navbar() {
                     {item.label}
                   </motion.button>
                 ))}
+
+                {/* Try Coding Mobile Link */}
+                <motion.a
+                  href="#/compiler"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMobileOpen(false)}
+                  className="block w-full text-center py-3 px-4 font-bold text-sm uppercase tracking-wider border-4 border-black bg-neo-accent text-black no-underline mt-4"
+                  style={{
+                    boxShadow: '4px 4px 0px 0px #000',
+                  }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: NAV_ITEMS.length * 0.05 }}
+                >
+                  TRY CODING ⚡
+                </motion.a>
               </div>
             </div>
           </motion.div>

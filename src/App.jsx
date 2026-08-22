@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Hero from './components/Hero/Hero';
 import Navbar from './components/Menu/Navbar';
 import About from './components/About/About';
@@ -8,6 +8,7 @@ import Skills from './components/Skills/Skills';
 import Experience from './components/Experience/Experience';
 import Contact from './components/Contact/Contact';
 import NeoCursor from './components/UI/NeoCursor';
+import Compiler from './components/Compiler/Compiler';
 
 const TECH_NAMES = [
   'PYTHON', 'TENSORFLOW', 'REACT', 'DOCKER', 'LINUX', 'C++',
@@ -57,11 +58,32 @@ function Footer() {
 }
 
 export default function App() {
+  const [currentHash, setCurrentHash] = useState(window.location.hash);
+
   useEffect(() => {
     document.fonts.ready.then(() => {
       document.body.classList.add('fonts-loaded');
     });
+
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+      // Smooth scroll back to top if entering compiler
+      if (window.location.hash === '#/compiler') {
+        window.scrollTo(0, 0);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  if (currentHash === '#/compiler') {
+    return (
+      <>
+        <NeoCursor />
+        <Compiler />
+      </>
+    );
+  }
 
   return (
     <>

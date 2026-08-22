@@ -143,6 +143,15 @@ export default function Hero() {
               <ArrowDown size={16} strokeWidth={3} />
             </button>
             <a
+              href="#/compiler"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="neo-btn neo-btn-secondary"
+            >
+              TRY CODING
+              <Code size={16} strokeWidth={3} />
+            </a>
+            <a
               href="#contact"
               className="neo-btn neo-btn-outline"
             >
