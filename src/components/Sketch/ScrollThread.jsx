@@ -53,7 +53,7 @@ export default function ScrollThread({ target }) {
       const inner = sections[0]?.querySelector('.section-inner')?.getBoundingClientRect();
       const gutter = inner ? inner.left - rect.left : width * 0.065;
       const left = Math.max(12, gutter * 0.45), right = width - left;
-      const bend = Math.min(22, left * 0.45);
+      const bend = Math.min(36, left * 0.7);
       bounds.current = { top: rect.top + window.scrollY, viewport: window.innerHeight, bottom: rect.top + window.scrollY + el.offsetHeight };
       let d = `M ${width * 0.56} 0`, previousX = width * 0.56, previousY = 0;
       let sectionIndex = 0;
@@ -62,22 +62,37 @@ export default function ScrollThread({ target }) {
           const anchor = section.querySelector('[data-thread-anchor]').getBoundingClientRect();
           const side = section.classList.contains('floating-right') ? 1 : -1;
           const center = anchor.left - rect.left + anchor.width / 2;
-          // Reserve the entire image box, including its rotation and floating motion.
-          // The caption sits on the opposite side, so use the outer edge for the curl.
-          const clearance = width < 760 ? 22 : 30;
-          const outer = side > 0 ? anchor.right - rect.left + clearance : anchor.left - rect.left - clearance;
-          const topY = anchor.top - rect.top - 30;
-          const bottomY = anchor.bottom - rect.top + 30;
-          const gap = topY - previousY;
-          d += ` C ${previousX} ${previousY + gap * .55}, ${center - side * anchor.width * .25} ${topY}, ${center} ${topY}`;
-          d += ` C ${center + side * anchor.width * .2} ${topY - 12}, ${outer - side * 12} ${topY - 10}, ${outer} ${topY}`;
-          const room = side > 0 ? width - outer - 5 : outer - 5;
-          const curl = Math.max(0, Math.min(26, room * .7));
-          d += ` C ${outer + side * curl} ${topY - 8}, ${outer + side * curl} ${topY + 48}, ${outer} ${topY + 36}`;
-          d += ` C ${outer + side * curl * .5} ${topY + 22}, ${outer + side * curl * .5} ${topY + 58}, ${outer} ${topY + 76}`;
-          d += ` C ${outer + side * 5} ${topY + anchor.height * .6}, ${outer + side * 5} ${bottomY - 35}, ${outer} ${bottomY}`;
-          d += ` C ${outer} ${bottomY + 24}, ${center} ${bottomY + 4}, ${center} ${bottomY + 16}`;
-          previousX = center; previousY = bottomY + 16;
+          const caption = section.querySelector('figcaption').getBoundingClientRect();
+          const piece = section.querySelector('.floating-piece').getBoundingClientRect();
+          const cy = anchor.top - rect.top + anchor.height / 2;
+          // Loose, overlapping laps reserve room for the sticker's hover and bob.
+          const rx = Math.min(anchor.width / 2 + (width < 760 ? 55 : 85), Math.min(center - 12, width - center - 12) / 1.16, piece.width / 2 - 8);
+          const ry = anchor.height / 2 + (width < 760 ? 70 : 90);
+          const laps = 2.5, count = 60;
+          const doodle = t => {
+            const angle = -Math.PI / 2 + t * Math.PI * 2 * laps;
+            const drift = 1 + t * .12;
+            return {
+              x: center + rx * Math.cos(angle) * (drift + .03 * Math.sin(angle * 3 + t * 5)),
+              y: cy + ry * Math.sin(angle) * (drift + .025 * Math.cos(angle * 5 + t * 4)),
+            };
+          };
+          const first = doodle(0);
+          const gap = first.y - previousY;
+          d += ` C ${previousX} ${previousY + gap * .55}, ${first.x - side * rx * .65} ${first.y}, ${first.x} ${first.y}`;
+          for (let step = 0; step < count; step++) {
+            const t0 = step / count, t1 = (step + 1) / count;
+            const a = doodle(t0), b = doodle(t1);
+            const beforeA = doodle(t0 - .0001), afterA = doodle(t0 + .0001);
+            const beforeB = doodle(t1 - .0001), afterB = doodle(t1 + .0001);
+            const tangentScale = 1 / count / .0006;
+            d += ` C ${a.x + (afterA.x - beforeA.x) * tangentScale} ${a.y + (afterA.y - beforeA.y) * tangentScale}, ${b.x - (afterB.x - beforeB.x) * tangentScale} ${b.y - (afterB.y - beforeB.y) * tangentScale}, ${b.x} ${b.y}`;
+          }
+          const last = doodle(1), lane = side > 0 ? right : left;
+          const exitY = caption.bottom - rect.top + 24;
+          d += ` C ${last.x - rx * .4} ${last.y}, ${lane} ${last.y + 8}, ${lane} ${last.y + 16}`;
+          d += ` C ${lane + side * bend * .35} ${last.y + 38}, ${lane - side * bend * .3} ${exitY - 16}, ${lane} ${exitY}`;
+          previousX = lane; previousY = exitY;
           return;
         }
         const i = sectionIndex++;
@@ -89,7 +104,8 @@ export default function ScrollThread({ target }) {
         // at both ends so the thread never forms a rectangular corner.
         const gap = entryY - previousY;
         d += ` C ${previousX} ${previousY + gap * 0.65}, ${x} ${entryY - gap * 0.65}, ${x} ${entryY}`;
-        d += ` C ${x} ${top + height * 0.22}, ${x + direction * bend} ${top + height * 0.29}, ${x} ${top + height * 0.42}`;
+        d += ` C ${x - direction * bend * .45} ${top + height * .17}, ${x + direction * bend} ${top + height * .23}, ${x} ${top + height * .30}`;
+        d += ` C ${x - direction * bend * .6} ${top + height * .34}, ${x + direction * bend * .8} ${top + height * .37}, ${x} ${top + height * .42}`;
         if (section.id === 'sketches') {
           const loop = Math.min(left * 0.8, narrow ? 16 : 44);
           d += ` C ${x - direction * loop} ${top + height * 0.54}, ${x + direction * loop} ${top + height * 0.59}, ${x + direction * loop} ${top + height * 0.50} C ${x + direction * loop} ${top + height * 0.43}, ${x - direction * loop * 0.3} ${top + height * 0.51}, ${x} ${top + height * 0.64}`;

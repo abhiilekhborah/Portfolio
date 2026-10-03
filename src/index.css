@@ -315,3 +315,11 @@ a:hover svg { transform: translate(2px,-2px); }
 @keyframes lamp-sway { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 @media (max-width: 760px) { .night-lamp { width: 160px; height: 320px; left: calc(var(--lamp-x) - 75px); top: calc(var(--lamp-y) - 72px); }.night-controls { right: 16px; bottom: 18px; max-width: calc(100vw - 32px); }.night-controls .annotation { font-size: 22px; } }
 @media (prefers-reduced-motion: reduce) { .night-shade,.lamp-warmth,.night-lamp { animation: none; } }
+
+/* Give the hand-drawn loops their own breathing room. */
+.floating-interlude { padding: 130px 0 60px; }
+.floating-piece { width: min(420px,calc(100% - 24px)); flex-direction: column; gap: 146px; }
+.floating-right .floating-piece { flex-direction: column; }
+.floating-piece figcaption,.floating-right .floating-piece figcaption { max-width: 300px; text-align: center; }
+.floating-caption-arrow { display: none; }
+@media (max-width: 760px) { .floating-interlude { padding: 105px 0 52px; }.floating-piece { gap: 130px; }.floating-piece figcaption { max-width: 230px; } }

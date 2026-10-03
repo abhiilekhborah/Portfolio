@@ -49,3 +49,7 @@ All five stickers are accessible buttons with a pop-out hover/focus effect and C
 ## Raccoon facts and bulb night mode
 
 Raccoon opens the user-supplied two paragraphs with bold/italic emphasis; the stray svg token was removed. Bulb toggles a dark viewport overlay with a warm pool of light anchored to its measured position, the supplied Light in the night JPEG animated with CSS, and an accessible lights-on control. No bulb GIF was present in the source folder. Scroll/resize tracking, Escape cleanup, repeat toggling, lights-on restoration, and 320px layout with no horizontal overflow verified. Reduced motion disables sway, glow pulsing, and fades.
+
+## Loose doodle loops
+
+The scroll thread circles each sticker two-and-a-half times with drifting radii and irregular curves. Captions moved below the loops, with extra breathing room. Section rails now have wider alternating bends. Rendered path sampled against all five anchors (with motion margins) and captions at 1280px, 820px, and 320px: no intersections or horizontal overflow. Scroll progression and existing sticker interactions retained.
