@@ -1,0 +1,45 @@
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { X, RotateCcw } from 'lucide-react';
+
+const BASE = import.meta.env.BASE_URL;
+export default function StickerMoment({ type, caption, onClose }) {
+  const dialog = useRef(null);
+  const [take, setTake] = useState(1);
+  const camera = type === 'camera';
+  const movie = type === 'movie';
+  useEffect(() => {
+    const previous = document.activeElement;
+    const overflow = document.body.style.overflow;
+    const modal = dialog.current;
+    modal.showModal();
+    document.body.style.overflow = 'hidden';
+    return () => { modal.close(); document.body.style.overflow = overflow; previous?.focus(); };
+  }, []);
+  return createPortal(<dialog ref={dialog} className={`sticker-dialog ${camera ? 'camera-dialog' : ''}`} aria-labelledby="sticker-moment-title" onCancel={onClose} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
+    <div className="sticker-moment-sheet">
+      <header><span className="eyebrow">{camera ? 'A MOMENT, CAPTURED' : movie ? `ON SET / TAKE ${String(take).padStart(2, '0')}` : 'A LITTLE ABOUT ME'}</span><button className="icon-button" aria-label="Close sticker moment" onClick={onClose} autoFocus><X size={22} /></button></header>
+      {camera ? <>
+        <div className="camera-capture" key={take}>
+          <div className="capture-flash" aria-hidden="true" />
+          <div className="film-snapshot">
+            <img className="film-border" src={`${BASE}floating-elements/film-frame.jpg`} alt="Black Fuji RDP III film frame" width="640" height="581" />
+            <div className="film-exposure"><img src={`${BASE}hero-poster.webp`} alt="Abhilekh’s hand-drawn portfolio portrait, captured in a film frame" /></div>
+          </div>
+        </div>
+        <h2 id="sticker-moment-title">Capture the good moments.</h2>
+        <p className="annotation">One for the scrapbook.</p>
+        <button className="sticker-replay" onClick={() => setTake(value => value + 1)}><RotateCcw size={15} /> Capture again</button>
+      </> : movie ? <>
+        <img className="moment-mini-sticker" src={`${BASE}floating-elements/movie.jpg`} alt="Movie clapperboard" width="600" height="600" />
+        <h2 id="sticker-moment-title">Rehearse with me</h2>
+        <blockquote className="rehearsal-line" key={take}>Basanti, in kutton ke saamne mat naachna!</blockquote>
+        <p className="eyebrow">SHOLAY · YOUR TURN, MAKE IT DRAMATIC.</p>
+        <button className="sticker-replay" onClick={() => setTake(value => value + 1)}><RotateCcw size={15} /> One more take</button>
+      </> : <>
+        <img className="moment-mini-sticker" src={`${BASE}floating-elements/${type}.jpg`} alt="" width="736" height="736" />
+        <h2 id="sticker-moment-title" className="annotation">{caption}</h2>
+      </>}
+    </div>
+  </dialog>, document.body);
+}

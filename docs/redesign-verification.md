@@ -41,3 +41,7 @@ Added the supplied camera, movie clapperboard, light bulb, MacBook, and raccoon 
 ## Sticker clearance update
 
 The line now curls around each sticker’s outer edge instead of crossing its center. Added interlude spacing and clearance for rotation, floating motion, and captions. Sampled the rendered cubic path against all five image anchors (with movement margins) and caption bounds at 1280px, 390px, and 320px: no intersections and no horizontal overflow. Original sticker images and captions remain intact.
+
+## Interactive stickers
+
+All five stickers are accessible buttons with a pop-out hover/focus effect and Click me cue; touch layouts keep the cue visible. Camera opens the supplied Fuji frame with a shutter flash, developing portfolio portrait, and Capture again replay. Film opens Rehearse with me and the corrected Sholay dialogue with a repeatable take. Other stickers show their existing caption. Native dialogs contain focus, close on Escape/backdrop/close button, restore focus, and restore page scrolling. Camera and film replay, keyboard activation, Escape, focus restoration, and centered 320px mobile layout verified. Reduced-motion CSS disables flash and entrance/develop animations.
