@@ -65,3 +65,7 @@ Laptop opens the eight original transparent PNG frames from typing_transparent_f
 ## Typing character directly on the portfolio
 
 Laptop now toggles a transparent character overlay directly over the existing portfolio, with no dialog, panel, dim backdrop, or scroll lock. Hello Humans types above the character in 12 steps as the frames play. Pause/play controls both animations; close/Escape removes the scene, and reopening restarts the greeting. Verified transparent computed background, no open dialog, unlocked scrolling, progressive greeting width, and 320px mobile without overflow. Reduced motion shows the full greeting and first frame.
+
+## Automatic typing dismissal
+
+The completed Hello Humans typewriter animation triggers a short fade and removes the character, greeting, and controls. Dismissal follows the animation completion event, so pause/resume is respected. Reduced motion shows the completed greeting for 1.2 seconds before dismissal. Verified visible at start, removed afterward with laptop pressed state reset, and retained while paused. Build and lint passed.
