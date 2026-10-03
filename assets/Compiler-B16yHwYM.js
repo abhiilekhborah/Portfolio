@@ -1,4 +1,4 @@
-import{a as e,c as t,i as n,n as r,o as i,r as a,s as o,t as s}from"./index-Chaz6zLH.js";var c=e(`check`,[[`path`,{d:`M20 6 9 17l-5-5`,key:`1gmf2c`}]]),l=e(`copy`,[[`rect`,{width:`14`,height:`14`,x:`8`,y:`8`,rx:`2`,ry:`2`,key:`17jyea`}],[`path`,{d:`M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2`,key:`zix9uf`}]]),u=t(o(),1),d=i(),f=[{id:`python`,name:`PYTHON`,version:`3.10.0`,template:`print("Hello from Abhilekh's Technical Notebook!")
+import{a as e,c as t,i as n,n as r,o as i,r as a,s as o,t as s}from"./index-C_IK0SCC.js";var c=e(`check`,[[`path`,{d:`M20 6 9 17l-5-5`,key:`1gmf2c`}]]),l=e(`copy`,[[`rect`,{width:`14`,height:`14`,x:`8`,y:`8`,rx:`2`,ry:`2`,key:`17jyea`}],[`path`,{d:`M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2`,key:`zix9uf`}]]),u=t(o(),1),d=i(),f=[{id:`python`,name:`PYTHON`,version:`3.10.0`,template:`print("Hello from Abhilekh's Technical Notebook!")
 
 # Try writing some Python code here
 for i in range(5):
