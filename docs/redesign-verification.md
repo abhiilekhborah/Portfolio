@@ -37,3 +37,7 @@ Horizontal scrolling was reverted at the user’s request. The vertical layout, 
 ## Floating elements
 
 Added the supplied camera, movie clapperboard, light bulb, MacBook, and raccoon stickers as floating interludes, with the user’s exact captions. Original JPEGs are preserved and blend into the paper through CSS. The scroll thread measures each stable image anchor and passes through its center; image/caption bobbing does not change document geometry. Desktop (1280px) and mobile (390px) placement checked with no horizontal overflow. Reduced motion disables floating.
+
+## Sticker clearance update
+
+The line now curls around each sticker’s outer edge instead of crossing its center. Added interlude spacing and clearance for rotation, floating motion, and captions. Sampled the rendered cubic path against all five image anchors (with movement margins) and caption bounds at 1280px, 390px, and 320px: no intersections and no horizontal overflow. Original sticker images and captions remain intact.

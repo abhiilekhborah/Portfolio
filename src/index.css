@@ -244,16 +244,16 @@ a:hover svg { transform: translate(2px,-2px); }
   .intro-hint { opacity: 1; }.scroll-thread { opacity: .28; }.sketch-sheet:hover { transform: none; }
 }
 
-.floating-interlude { position: relative; padding: 24px 0 32px; }
-.floating-piece { display: flex; align-items: center; gap: 28px; width: min(500px,100%); margin: 0; }
-.floating-right .floating-piece { margin-left: auto; flex-direction: row-reverse; }
+.floating-interlude { position: relative; padding: 64px 0 76px; }
+.floating-piece { display: flex; align-items: center; gap: 28px; width: min(500px,calc(100% - 24px)); margin: 0 0 0 12px; }
+.floating-right .floating-piece { margin-left: auto; margin-right: 12px; flex-direction: row-reverse; }
 .floating-sticker-anchor { width: 250px; height: 250px; flex: 0 0 250px; }
 .floating-sticker-anchor img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: darken; }
 .floating-piece figcaption { max-width: 210px; font-size: 29px; line-height: 1.1; }
 .floating-caption-arrow { display: block; margin-bottom: 10px; font-family: var(--font-sketch); font-size: 34px; }
 .floating-right .floating-piece figcaption { text-align: right; }
 @media (max-width: 760px) {
-  .floating-interlude { padding: 20px 0 28px; }
+  .floating-interlude { padding: 48px 0 58px; }
   .floating-piece { gap: 12px; }
   .floating-sticker-anchor { width: 155px; height: 180px; flex-basis: 155px; }
   .floating-piece figcaption { font-size: 23px; max-width: 155px; }

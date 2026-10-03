@@ -60,13 +60,24 @@ export default function ScrollThread({ target }) {
       blocks.forEach(section => {
         if (section.classList.contains('floating-interlude')) {
           const anchor = section.querySelector('[data-thread-anchor]').getBoundingClientRect();
-          const x = anchor.left - rect.left + anchor.width / 2;
-          const y = anchor.top - rect.top + anchor.height / 2;
-          const gap = y - previousY;
-          d += ` C ${previousX} ${previousY + gap * .6}, ${x} ${y - gap * .5}, ${x} ${y}`;
-          const exitY = section.offsetTop + section.offsetHeight - 22;
-          d += ` C ${x} ${y + 55}, ${x + (x < width / 2 ? -18 : 18)} ${exitY - 40}, ${x} ${exitY}`;
-          previousX = x; previousY = exitY;
+          const side = section.classList.contains('floating-right') ? 1 : -1;
+          const center = anchor.left - rect.left + anchor.width / 2;
+          // Reserve the entire image box, including its rotation and floating motion.
+          // The caption sits on the opposite side, so use the outer edge for the curl.
+          const clearance = width < 760 ? 22 : 30;
+          const outer = side > 0 ? anchor.right - rect.left + clearance : anchor.left - rect.left - clearance;
+          const topY = anchor.top - rect.top - 30;
+          const bottomY = anchor.bottom - rect.top + 30;
+          const gap = topY - previousY;
+          d += ` C ${previousX} ${previousY + gap * .55}, ${center - side * anchor.width * .25} ${topY}, ${center} ${topY}`;
+          d += ` C ${center + side * anchor.width * .2} ${topY - 12}, ${outer - side * 12} ${topY - 10}, ${outer} ${topY}`;
+          const room = side > 0 ? width - outer - 5 : outer - 5;
+          const curl = Math.max(0, Math.min(26, room * .7));
+          d += ` C ${outer + side * curl} ${topY - 8}, ${outer + side * curl} ${topY + 48}, ${outer} ${topY + 36}`;
+          d += ` C ${outer + side * curl * .5} ${topY + 22}, ${outer + side * curl * .5} ${topY + 58}, ${outer} ${topY + 76}`;
+          d += ` C ${outer + side * 5} ${topY + anchor.height * .6}, ${outer + side * 5} ${bottomY - 35}, ${outer} ${bottomY}`;
+          d += ` C ${outer} ${bottomY + 24}, ${center} ${bottomY + 4}, ${center} ${bottomY + 16}`;
+          previousX = center; previousY = bottomY + 16;
           return;
         }
         const i = sectionIndex++;
