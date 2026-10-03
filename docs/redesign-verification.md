@@ -33,3 +33,7 @@ The supplied 960 × 540 GIF is preserved. The rendered animation uses a 1920 × 
 Replaced abrupt section joins with curved transitions through section padding. Mobile now alternates sides instead of using a straight left rail. Added a moving tip and spring smoothing; scroll reversal retracts the same path. Loop progression is strictly monotonic, and the final curl completes gradually rather than jumping at the bottom. Geometry uses actual content gutters and refreshes on font loading/resizing without mutating the shared scroll value. Verified desktop drawing progression (0.1907 → 0.3133) and reversal (0.2166), mobile at 390px, the sketch loop, contact clearance, and no horizontal overflow. Reduced motion shows the complete static line without its animated tip.
 
 Horizontal scrolling was reverted at the user’s request. The vertical layout, scroll thread, gallery arrangement, and navigation are restored; the improved hero assets are retained.
+
+## Floating elements
+
+Added the supplied camera, movie clapperboard, light bulb, MacBook, and raccoon stickers as floating interludes, with the user’s exact captions. Original JPEGs are preserved and blend into the paper through CSS. The scroll thread measures each stable image anchor and passes through its center; image/caption bobbing does not change document geometry. Desktop (1280px) and mobile (390px) placement checked with no horizontal overflow. Reduced motion disables floating.

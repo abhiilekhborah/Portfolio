@@ -49,13 +49,27 @@ export default function ScrollThread({ target }) {
       const width = el.clientWidth;
       const narrow = width < 1050;
       const sections = [...el.querySelectorAll(':scope > section')];
+      const blocks = [...el.querySelectorAll(':scope > section, :scope > .floating-interlude')];
       const inner = sections[0]?.querySelector('.section-inner')?.getBoundingClientRect();
       const gutter = inner ? inner.left - rect.left : width * 0.065;
       const left = Math.max(12, gutter * 0.45), right = width - left;
       const bend = Math.min(22, left * 0.45);
       bounds.current = { top: rect.top + window.scrollY, viewport: window.innerHeight, bottom: rect.top + window.scrollY + el.offsetHeight };
       let d = `M ${width * 0.56} 0`, previousX = width * 0.56, previousY = 0;
-      sections.forEach((section, i) => {
+      let sectionIndex = 0;
+      blocks.forEach(section => {
+        if (section.classList.contains('floating-interlude')) {
+          const anchor = section.querySelector('[data-thread-anchor]').getBoundingClientRect();
+          const x = anchor.left - rect.left + anchor.width / 2;
+          const y = anchor.top - rect.top + anchor.height / 2;
+          const gap = y - previousY;
+          d += ` C ${previousX} ${previousY + gap * .6}, ${x} ${y - gap * .5}, ${x} ${y}`;
+          const exitY = section.offsetTop + section.offsetHeight - 22;
+          d += ` C ${x} ${y + 55}, ${x + (x < width / 2 ? -18 : 18)} ${exitY - 40}, ${x} ${exitY}`;
+          previousX = x; previousY = exitY;
+          return;
+        }
+        const i = sectionIndex++;
         const top = section.offsetTop, height = section.offsetHeight;
         const x = i % 2 === 0 ? right : left;
         const direction = x < width / 2 ? 1 : -1;
@@ -89,7 +103,7 @@ export default function ScrollThread({ target }) {
     const schedule = () => { cancelAnimationFrame(frame); if (!disposed) frame = requestAnimationFrame(measure); };
     const observer = new ResizeObserver(schedule);
     observer.observe(el);
-    el.querySelectorAll(':scope > section').forEach(section => observer.observe(section));
+    el.querySelectorAll(':scope > section, :scope > .floating-interlude, [data-thread-anchor]').forEach(section => observer.observe(section));
     window.addEventListener('resize', schedule);
     document.fonts.ready.then(schedule);
     schedule();

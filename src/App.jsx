@@ -10,6 +10,7 @@ import SketchGallery from './components/Sketch/SketchGallery';
 import CodingStats from './components/CodingStats/CodingStats';
 import Contact from './components/Contact/Contact';
 import ScrollThread from './components/Sketch/ScrollThread';
+import FloatingElement from './components/Sketch/FloatingElement';
 const Compiler = lazy(() => import('./components/Compiler/Compiler'));
 
 export default function App() {
@@ -29,7 +30,17 @@ export default function App() {
           <Hero />
           <div className="journey" ref={journey}>
             <ScrollThread target={journey} />
-            <About /><CodingStats /><Projects /><Skills /><Experience /><SketchGallery /><Contact />
+            <About />
+            <FloatingElement type="laptop" side="right" />
+            <CodingStats />
+            <FloatingElement type="bulb" />
+            <Projects />
+            <FloatingElement type="raccoon" side="right" />
+            <Skills /><Experience />
+            <FloatingElement type="movie" side="right" />
+            <SketchGallery />
+            <FloatingElement type="camera" />
+            <Contact />
           </div>
         </main>
       </div>}
