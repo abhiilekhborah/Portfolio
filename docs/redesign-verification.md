@@ -53,3 +53,7 @@ Raccoon opens the user-supplied two paragraphs with bold/italic emphasis; the st
 ## Loose doodle loops
 
 The scroll thread circles each sticker two-and-a-half times with drifting radii and irregular curves. Captions moved below the loops, with extra breathing room. Section rails now have wider alternating bends. Rendered path sampled against all five anchors (with motion margins) and captions at 1280px, 820px, and 320px: no intersections or horizontal overflow. Scroll progression and existing sticker interactions retained.
+
+## Hanging bulb animation
+
+Replaced the sticker-positioned JPEG effect with a bulb descending from the top of the viewport, then lighting its surroundings. Uses the supplied lightbulb_glow_transparent.webm (1280×720), muted inline looping playback, with the supplied transparent PNG for reduced motion or video errors. Responsive video placement, softened glow edges, and top cord keep the animation integrated into the darkened portfolio. Verified playing WebM, mobile 320px with no overflow, and lights-on cleanup; build and lint passed.

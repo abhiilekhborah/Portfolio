@@ -323,3 +323,24 @@ a:hover svg { transform: translate(2px,-2px); }
 .floating-piece figcaption,.floating-right .floating-piece figcaption { max-width: 300px; text-align: center; }
 .floating-caption-arrow { display: none; }
 @media (max-width: 760px) { .floating-interlude { padding: 105px 0 52px; }.floating-piece { gap: 130px; }.floating-piece figcaption { max-width: 230px; } }
+
+/* Hanging bulb entrance: the light arrives from the top, then illuminates. */
+.hanging-bulb-night { --lamp-x: 50vw; --lamp-y: calc(40px + clamp(180px,24vw,260px) * .84); --light-radius: clamp(280px,42vw,540px); }
+.hanging-bulb-night .night-shade { background: radial-gradient(circle var(--light-radius) at var(--lamp-x) var(--lamp-y),rgba(7,8,6,.12) 10%,rgba(7,8,6,.3) 35%,rgba(7,8,6,.8) 72%,rgba(7,8,6,.98) 100%); animation: hanging-surroundings 1.2s ease both; }
+.hanging-bulb-night .lamp-warmth { animation: hanging-warmth 1.2s ease both, lamp-glow 4s ease-in-out 1.2s infinite; }
+.hanging-night-lamp { width: clamp(180px,24vw,260px); height: auto; left: calc(50vw - clamp(180px,24vw,260px) * .5); top: 40px; mix-blend-mode: normal; mask-image: none; animation: hanging-lamp-drop 1.2s cubic-bezier(.2,.7,.25,1) both; }
+.hanging-lamp-cord { position: fixed; top: 0; left: calc(50vw + clamp(180px,24vw,260px) * .043); width: 2px; height: 64px; background: #777665; z-index: 1001; pointer-events: none; transform-origin: top; animation: hanging-cord-drop .9s ease both; }
+@keyframes hanging-lamp-drop { 0% { transform: translateY(-100vh); filter: brightness(.15); } 68% { transform: translateY(0); filter: brightness(.15); } 100% { transform: translateY(0); filter: brightness(1); } }
+@keyframes hanging-cord-drop { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes hanging-surroundings { 0%,60% { background-color: #070806; } 100% { background-color: transparent; } }
+@keyframes hanging-warmth { 0%,60% { opacity: 0; } 100% { opacity: .8; } }
+@media (prefers-reduced-motion: reduce) { .hanging-night-lamp,.hanging-lamp-cord,.hanging-bulb-night .night-shade,.hanging-bulb-night .lamp-warmth { animation: none; } }
+
+.hanging-bulb-night { --lamp-y: calc(40px + clamp(420px,65vw,680px) * .455); }
+.hanging-video-stage { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 1001; mix-blend-mode: screen; }
+.hanging-video-stage .hanging-night-lamp { position: absolute; width: clamp(420px,65vw,680px); left: calc(50vw - clamp(420px,65vw,680px) * .5); height: auto; mask-image: radial-gradient(ellipse 50% 50% at 50% 50%,#000 40%,transparent 100%); }
+.hanging-lamp-cord { left: calc(50vw + 3px); height: calc(40px + clamp(420px,65vw,680px) * .28); }
+@media (prefers-reduced-motion: reduce) { .hanging-bulb-night { --lamp-y: calc(40px + clamp(180px,24vw,260px) * .84); }.hanging-lamp-cord { left: calc(50vw + clamp(180px,24vw,260px) * .043); height: 64px; } }
+
+.hanging-bulb-night.lamp-static-mode { --lamp-y: calc(40px + clamp(180px,24vw,260px) * .84); }
+.hanging-lamp-cord.lamp-static-mode { left: calc(50vw + clamp(180px,24vw,260px) * .043); height: 64px; }
