@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import StickerMoment from './StickerMoment';
 import BulbNight from './BulbNight';
+import LaptopTyping from './LaptopTyping';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const ELEMENTS = {
@@ -18,7 +19,7 @@ export default function FloatingElement({ type, side = 'left' }) {
     <div className="section-inner">
       <figure className="floating-piece">
         <div className="floating-sticker-anchor" data-thread-anchor>
-          <button className="floating-sticker-button" onClick={() => setOpen(value => type === 'bulb' ? !value : true)} aria-pressed={type === 'bulb' ? open : undefined} aria-label={`Click me: ${element.caption}`} aria-haspopup={type === 'bulb' ? undefined : 'dialog'}>
+          <button className="floating-sticker-button" onClick={() => setOpen(value => ['bulb', 'laptop'].includes(type) ? !value : true)} aria-pressed={['bulb', 'laptop'].includes(type) ? open : undefined} aria-label={`Click me: ${element.caption}`} aria-haspopup={['bulb', 'laptop'].includes(type) ? undefined : 'dialog'}>
           <motion.img src={`${import.meta.env.BASE_URL}floating-elements/${type}.jpg`} alt={element.alt} width="736" height="736" loading="lazy" decoding="async"
             initial={false} animate={reduced ? { y: 0, rotate: element.rotation } : { y: [0, -9, 0], rotate: [element.rotation, element.rotation + 2, element.rotation] }}
             transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }} />
@@ -30,6 +31,6 @@ export default function FloatingElement({ type, side = 'left' }) {
         </motion.figcaption>
       </figure>
     </div>
-    {open && (type === 'bulb' ? <BulbNight onClose={() => setOpen(false)} /> : <StickerMoment type={type} caption={element.caption} onClose={() => setOpen(false)} />)}
+    {open && (type === 'bulb' ? <BulbNight onClose={() => setOpen(false)} /> : type === 'laptop' ? <LaptopTyping onClose={() => setOpen(false)} /> : <StickerMoment type={type} caption={element.caption} onClose={() => setOpen(false)} />)}
   </div>;
 }

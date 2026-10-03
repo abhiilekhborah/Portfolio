@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, RotateCcw } from 'lucide-react';
-import TypingAnimation from './TypingAnimation';
 
 const BASE = import.meta.env.BASE_URL;
 export default function StickerMoment({ type, caption, onClose }) {
@@ -10,7 +9,6 @@ export default function StickerMoment({ type, caption, onClose }) {
   const camera = type === 'camera';
   const movie = type === 'movie';
   const raccoon = type === 'raccoon';
-  const laptop = type === 'laptop';
   useEffect(() => {
     const previous = document.activeElement;
     const overflow = document.body.style.overflow;
@@ -39,9 +37,6 @@ export default function StickerMoment({ type, caption, onClose }) {
         <blockquote className="rehearsal-line" key={take}>Basanti, in kutton ke saamne mat naachna!</blockquote>
         <p className="eyebrow">SHOLAY · YOUR TURN, MAKE IT DRAMATIC.</p>
         <button className="sticker-replay" onClick={() => setTake(value => value + 1)}><RotateCcw size={15} /> One more take</button>
-      </> : laptop ? <>
-        <h2 id="sticker-moment-title">My life partner is my laptop</h2>
-        <TypingAnimation />
       </> : raccoon ? <>
         <img className="moment-mini-sticker" src={`${BASE}floating-elements/raccoon.jpg`} alt="Raccoon wearing sunglasses" width="600" height="600" />
         <h2 id="sticker-moment-title">A clever little creature</h2>

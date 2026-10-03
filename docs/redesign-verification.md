@@ -61,3 +61,7 @@ Replaced the sticker-positioned JPEG effect with a bulb descending from the top 
 ## Laptop typing animation
 
 Laptop opens the eight original transparent PNG frames from typing_transparent_frames.zip, played in sequence at 10 frames per second. All frames load before the animation starts; pause/play freezes and resumes the sequence. Reduced motion shows the first frame. Verified all eight images loaded, one visible frame at a time, pause state, mobile 320px dialog with no overflow, and Escape close. Original PNG transparency is preserved without re-encoding.
+
+## Typing character directly on the portfolio
+
+Laptop now toggles a transparent character overlay directly over the existing portfolio, with no dialog, panel, dim backdrop, or scroll lock. Hello Humans types above the character in 12 steps as the frames play. Pause/play controls both animations; close/Escape removes the scene, and reopening restarts the greeting. Verified transparent computed background, no open dialog, unlocked scrolling, progressive greeting width, and 320px mobile without overflow. Reduced motion shows the full greeting and first frame.

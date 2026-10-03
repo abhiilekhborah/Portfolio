@@ -351,3 +351,15 @@ a:hover svg { transform: translate(2px,-2px); }
 .typing-animation.is-ready .typing-frame { animation: typing-frame-cycle .8s steps(1,end) infinite; }
 @keyframes typing-frame-cycle { 0% { opacity: 1; } 12.5%,100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .typing-animation .typing-frame { animation: none; opacity: 0; }.typing-animation .typing-frame:first-child { opacity: 1; } }
+
+/* Transparent typing character lives on the portfolio itself. */
+.laptop-typing-scene { position: fixed; z-index: 900; width: min(580px,calc(100vw - 32px)); left: 50%; bottom: 20px; transform: translateX(-50%); pointer-events: none; text-align: center; }
+.laptop-typing-scene .typing-animation { margin-top: 8px; }
+.laptop-typing-scene button { pointer-events: auto; }
+.typing-close { position: absolute; right: 0; top: 0; }
+.typing-greeting { display: flex; justify-content: center; min-height: 54px; color: var(--color-ink); text-shadow: 0 1px 5px var(--color-paper),0 0 12px var(--color-paper); font-family: var(--font-mono); font-size: clamp(25px,5vw,40px); font-weight: 600; }
+.typing-greeting span { display: block; width: 12ch; overflow: hidden; white-space: nowrap; border-right: 2px solid currentColor; }
+.laptop-typing-scene .sticker-replay { margin-top: 8px; background: var(--color-paper); }
+@keyframes hello-human-type { from { width: 0; } to { width: 12ch; } }
+@media (max-width: 760px) { .laptop-typing-scene { bottom: 14px; }.typing-greeting { min-height: 42px; }.typing-close { top: -28px; } }
+@media (prefers-reduced-motion: reduce) { .typing-greeting span { animation: none !important; width: 12ch !important; } }
