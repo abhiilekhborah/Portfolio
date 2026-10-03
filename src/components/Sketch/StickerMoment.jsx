@@ -25,7 +25,7 @@ export default function StickerMoment({ type, caption, onClose }) {
           <div className="capture-flash" aria-hidden="true" />
           <div className="film-snapshot">
             <img className="film-border" src={`${BASE}floating-elements/film-frame.jpg`} alt="Black Fuji RDP III film frame" width="640" height="581" />
-            <div className="film-exposure"><img src={`${BASE}hero-poster.webp`} alt="Abhilekh’s hand-drawn portfolio portrait, captured in a film frame" /></div>
+            <div className="film-exposure"><img src={`${BASE}hero-v4-poster.webp`} alt="Abhilekh’s hand-drawn portfolio portrait, captured in a film frame" /></div>
           </div>
         </div>
         <h2 id="sticker-moment-title">Capture the good moments.</h2>

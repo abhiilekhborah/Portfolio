@@ -69,3 +69,7 @@ Laptop now toggles a transparent character overlay directly over the existing po
 ## Automatic typing dismissal
 
 The completed Hello Humans typewriter animation triggers a short fade and removes the character, greeting, and controls. Dismissal follows the animation completion event, so pause/resume is respected. Reduced motion shows the completed greeting for 1.2 seconds before dismissal. Verified visible at start, removed afterward with laptop pressed state reset, and retained while paused. Build and lint passed.
+
+## Updated v4 home cover
+
+Opening cover now uses the supplied abhilekh_borah_portfolio_hero_v4_720p.gif directly at its original 1280×720 resolution. Its six-second animation is held at completed artwork after 5.05 seconds, before the fade to blank. Lossless WebP poster extracted from the completed frame; hero preload and camera snapshot updated to the matching poster. A versioned session key lets returning visitors see the new intro once. Completed cover source, decoded dimensions, and appearance verified locally; build and lint passed.
