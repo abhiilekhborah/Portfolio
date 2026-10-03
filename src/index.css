@@ -344,3 +344,10 @@ a:hover svg { transform: translate(2px,-2px); }
 
 .hanging-bulb-night.lamp-static-mode { --lamp-y: calc(40px + clamp(180px,24vw,260px) * .84); }
 .hanging-lamp-cord.lamp-static-mode { left: calc(50vw + clamp(180px,24vw,260px) * .043); height: 64px; }
+
+.typing-animation { position: relative; width: 100%; aspect-ratio: 980 / 588; margin-top: 24px; }
+.typing-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; }
+.typing-animation.is-still .typing-frame:first-child { opacity: 1; }
+.typing-animation.is-ready .typing-frame { animation: typing-frame-cycle .8s steps(1,end) infinite; }
+@keyframes typing-frame-cycle { 0% { opacity: 1; } 12.5%,100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .typing-animation .typing-frame { animation: none; opacity: 0; }.typing-animation .typing-frame:first-child { opacity: 1; } }

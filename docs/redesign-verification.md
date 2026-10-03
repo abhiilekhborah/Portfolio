@@ -57,3 +57,7 @@ The scroll thread circles each sticker two-and-a-half times with drifting radii 
 ## Hanging bulb animation
 
 Replaced the sticker-positioned JPEG effect with a bulb descending from the top of the viewport, then lighting its surroundings. Uses the supplied lightbulb_glow_transparent.webm (1280×720), muted inline looping playback, with the supplied transparent PNG for reduced motion or video errors. Responsive video placement, softened glow edges, and top cord keep the animation integrated into the darkened portfolio. Verified playing WebM, mobile 320px with no overflow, and lights-on cleanup; build and lint passed.
+
+## Laptop typing animation
+
+Laptop opens the eight original transparent PNG frames from typing_transparent_frames.zip, played in sequence at 10 frames per second. All frames load before the animation starts; pause/play freezes and resumes the sequence. Reduced motion shows the first frame. Verified all eight images loaded, one visible frame at a time, pause state, mobile 320px dialog with no overflow, and Escape close. Original PNG transparency is preserved without re-encoding.
