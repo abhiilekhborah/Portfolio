@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 export default function NeoCursor() {
   const cursorRef = useRef(null);
   const dotRef = useRef(null);
+  const [cursorText, setCursorText] = useState('');
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const pos = useRef({ x: -100, y: -100 });
@@ -10,7 +11,10 @@ export default function NeoCursor() {
   const rafId = useRef(null);
 
   useEffect(() => {
-    // Hide default cursor globally
+    // Only run on desktop with fine pointer
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    if (isTouch) return;
+
     document.body.style.cursor = 'none';
 
     const handleMouseMove = (e) => {
@@ -21,26 +25,38 @@ export default function NeoCursor() {
     const handleMouseUp = () => setIsClicking(false);
 
     const handleMouseOver = (e) => {
-      const el = e.target.closest('button, a, [role="button"], input, textarea, select, [data-cursor="pointer"]');
-      setIsHovering(!!el);
+      const targetEl = e.target.closest('[data-cursor], button, a, [role="button"]');
+      if (targetEl) {
+        setIsHovering(true);
+        const customText = targetEl.getAttribute('data-cursor');
+        if (customText) {
+          setCursorText(customText);
+        } else if (targetEl.tagName === 'A' && targetEl.getAttribute('target') === '_blank') {
+          setCursorText('↗');
+        } else {
+          setCursorText('');
+        }
+      } else {
+        setIsHovering(false);
+        setCursorText('');
+      }
     };
 
-    // Smooth animation loop
     const animate = () => {
-      pos.current.x += (target.current.x - pos.current.x) * 0.15;
-      pos.current.y += (target.current.y - pos.current.y) * 0.15;
+      pos.current.x += (target.current.x - pos.current.x) * 0.22;
+      pos.current.y += (target.current.y - pos.current.y) * 0.22;
 
       if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px)`;
+        cursorRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)`;
       }
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${target.current.x}px, ${target.current.y}px)`;
+        dotRef.current.style.transform = `translate3d(${target.current.x}px, ${target.current.y}px, 0)`;
       }
 
       rafId.current = requestAnimationFrame(animate);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
     window.addEventListener('mouseover', handleMouseOver);
@@ -52,57 +68,49 @@ export default function NeoCursor() {
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
       window.removeEventListener('mouseover', handleMouseOver);
-      cancelAnimationFrame(rafId.current);
+      if (rafId.current) cancelAnimationFrame(rafId.current);
     };
   }, []);
 
-  // Hide on touch devices
-  const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
+  const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
   if (isTouchDevice) return null;
 
   return (
     <>
-      {/* Outer ring — follows with lag */}
+      {/* Outer Follower Ring / Badge */}
       <div
         ref={cursorRef}
+        className="fixed top-0 left-0 pointer-events-none z-[9999] will-change-transform flex items-center justify-center transition-[width,height,margin,opacity] duration-150 ease-out"
         style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: isHovering ? '48px' : '32px',
-          height: isHovering ? '48px' : '32px',
-          marginLeft: isHovering ? '-24px' : '-16px',
-          marginTop: isHovering ? '-24px' : '-16px',
-          border: '3px solid #000',
-          background: isClicking
-            ? 'var(--color-neo-accent)'
-            : isHovering
-              ? 'var(--color-neo-secondary)'
-              : 'transparent',
-          opacity: isClicking ? 0.9 : isHovering ? 0.5 : 0.6,
-          pointerEvents: 'none',
-          zIndex: 9999,
-          transition: 'width 0.2s, height 0.2s, margin 0.2s, background 0.15s, opacity 0.15s',
-          willChange: 'transform',
+          width: cursorText ? '48px' : isHovering ? '36px' : '20px',
+          height: cursorText ? '26px' : isHovering ? '36px' : '20px',
+          marginLeft: cursorText ? '-24px' : isHovering ? '-18px' : '-10px',
+          marginTop: cursorText ? '-13px' : isHovering ? '-18px' : '-10px',
+          borderRadius: cursorText ? '12px' : '9999px',
+          border: '1.5px solid #141312',
+          backgroundColor: cursorText ? '#141312' : isHovering ? 'rgba(20, 19, 18, 0.08)' : 'transparent',
+          color: '#f6f5f1',
+          opacity: isClicking ? 0.9 : 1,
         }}
-      />
+      >
+        {cursorText && (
+          <span className="font-mono text-[9px] font-bold tracking-widest uppercase select-none leading-none">
+            {cursorText}
+          </span>
+        )}
+      </div>
 
-      {/* Inner dot — instant position */}
+      {/* Tiny Ink Pen Center Dot */}
       <div
         ref={dotRef}
+        className="fixed top-0 left-0 pointer-events-none z-[10000] will-change-transform rounded-full bg-[#141312]"
         style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: isClicking ? '12px' : '8px',
-          height: isClicking ? '12px' : '8px',
-          marginLeft: isClicking ? '-6px' : '-4px',
-          marginTop: isClicking ? '-6px' : '-4px',
-          background: '#000',
-          pointerEvents: 'none',
-          zIndex: 10000,
-          transition: 'width 0.1s, height 0.1s, margin 0.1s',
-          willChange: 'transform',
+          width: isClicking ? '6px' : cursorText ? '0px' : '5px',
+          height: isClicking ? '6px' : cursorText ? '0px' : '5px',
+          marginLeft: isClicking ? '-3px' : '-2.5px',
+          marginTop: isClicking ? '-3px' : '-2.5px',
+          opacity: cursorText ? 0 : 1,
+          transition: 'width 0.1s, height 0.1s, opacity 0.1s',
         }}
       />
     </>

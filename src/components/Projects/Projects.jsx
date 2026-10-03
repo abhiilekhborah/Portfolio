@@ -1,184 +1,62 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-import { FolderOpen, ExternalLink, Code, Star } from 'lucide-react';
-import NeoPopup from '../UI/NeoPopup';
-
-const PROJECTS = [
-  {
-    id: 1,
-    title: 'YOJANA.SEARCH',
-    subtitle: 'AI Scheme Matcher',
-    description: 'An intelligent search system that helps citizens discover relevant government schemes using semantic matching and NLP processing.',
-    tech: ['Python', 'NLP', 'Flask', 'AI'],
-    color: 'var(--color-neo-accent)',
-    bg: 'bg-neo-accent',
-    image: '/Portfolio/projects/Yojana_search.JPG',
-  },
-  {
-    id: 2,
-    title: 'FACE GENERATOR',
-    subtitle: 'GAN Deep Learning',
-    description: 'A deep generative model using Generative Adversarial Networks to synthesize high-fidelity human faces from pure noise vectors.',
-    tech: ['Python', 'TensorFlow', 'GANs', 'DL'],
-    color: 'var(--color-neo-secondary)',
-    bg: 'bg-neo-secondary',
-    image: '/Portfolio/projects/Face_generator.JPG',
-  },
-  {
-    id: 3,
-    title: 'ARIM AI',
-    subtitle: 'Autonomous Assistant',
-    description: 'An intelligent companion AI built to assist users with administrative and creative tasks using natural language understanding.',
-    tech: ['Python', 'ML', 'APIs', 'NLP'],
-    color: 'var(--color-neo-muted)',
-    bg: 'bg-neo-muted',
-    image: '/Portfolio/projects/ArimAI.WEBP',
-  },
-  {
-    id: 4,
-    title: 'OXFORD FLOWERS',
-    subtitle: 'Computer Vision',
-    description: 'Computer vision classification system utilizing transfer learning on Oxford Flowers dataset, achieving high precision cataloging.',
-    tech: ['Python', 'TF', 'CNNs', 'Vision'],
-    color: 'var(--color-neo-accent)',
-    bg: 'bg-neo-accent',
-    image: '/Portfolio/projects/Oxford_flowers.AVIF',
-  },
-];
-
-function ProjectCard({ project, index }) {
-  const [showPopup, setShowPopup] = useState(false);
-
-  return (
-    <motion.div
-      className="neo-card p-0 overflow-hidden flex flex-col"
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.3, delay: index * 0.1 }}
-
-    >
-      {/* Image area */}
-      <div className="relative h-40 border-b-4 border-black overflow-hidden bg-neo-bg">
-        {project.image && (
-          <img
-            src={project.image}
-            alt={project.title}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )}
-        {/* Number badge */}
-        <div
-          className="absolute top-3 left-3 neo-badge bg-black text-white"
-          style={{ transform: 'rotate(-3deg)' }}
-        >
-          #{String(project.id).padStart(2, '0')}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-5 flex-1 flex flex-col">
-        <h3 className="text-lg font-bold uppercase tracking-tight mb-1">
-          {project.title}
-        </h3>
-        <div className="text-sm font-bold uppercase tracking-wider opacity-50 mb-3">
-          {project.subtitle}
-        </div>
-        <p className="text-sm font-medium leading-relaxed opacity-80 mb-4 flex-1">
-          {project.description}
-        </p>
-
-        {/* Tech badges */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {project.tech.map((t) => (
-            <span
-              key={t}
-              className="neo-badge text-[10px]"
-              style={{ background: project.color, fontSize: '10px' }}
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex gap-2 mt-auto">
-          <button
-            onClick={() => {
-
-              if (project.id === 1) {
-                window.open('https://drive.google.com/file/d/1Ty7ctoCpFRQLo_IOG8MIleYIWKUW3otJ/view?usp=sharing', '_blank');
-              } else if (project.id === 3) {
-                window.open('https://drive.google.com/file/d/1LAoZlFC4Vm0-yRD1IYYCJlZM_Kz5udyS/view?usp=sharing', '_blank');
-              } else {
-                setShowPopup(true);
-              }
-            }}
-            className="neo-btn neo-btn-primary flex-1 text-xs py-2 px-3"
-          >
-            <ExternalLink size={12} strokeWidth={3} /> VIEW
-          </button>
-          <button
-
-            className="neo-btn neo-btn-outline flex-1 text-xs py-2 px-3"
-          >
-            <Code size={12} strokeWidth={3} /> CODE
-          </button>
-        </div>
-      </div>
-
-      {/* Popup */}
-      <AnimatePresence>
-        {showPopup && (
-          <NeoPopup isOpen={showPopup} onClose={() => setShowPopup(false)} message="COMING SOON" />
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Pause, Play } from 'lucide-react';
+import { PROJECTS_DATA } from '../../data/portfolioData';
+import SectionHeading from '../Sketch/SectionHeading';
 
 export default function Projects() {
-  return (
-    <section id="projects" className="relative bg-neo-bg" style={{ zIndex: 1 }}>
-      <div className="section-container">
-        {/* Section Header */}
-        <motion.div
-          className="mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <div className="bg-neo-muted border-4 border-black p-2" style={{ boxShadow: '4px 4px 0px 0px #000' }}>
-              <FolderOpen size={20} strokeWidth={3} />
-            </div>
-            <h2 className="section-title mb-0">PROJECTS</h2>
-          </div>
-          <p className="section-subtitle mb-0">THINGS I'VE BUILT & SHIPPED</p>
-        </motion.div>
-
-        {/* Project Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {PROJECTS.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
-          ))}
-        </div>
-
-        {/* Bottom decorative badge */}
-        <motion.div
-          className="mt-10 flex justify-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <div className="neo-badge neo-badge-pill bg-neo-secondary flex items-center gap-2" style={{ transform: 'rotate(2deg)' }}>
-            <Star size={12} strokeWidth={3} fill="#000" />
-            MORE PROJECTS COMING SOON
-            <Star size={12} strokeWidth={3} fill="#000" />
-          </div>
-        </motion.div>
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [stopped, setStopped] = useState(false);
+  const [hidden, setHidden] = useState(document.hidden);
+  const [interaction, setInteraction] = useState(0);
+  const region = useRef(null);
+  const inView = useInView(region, { amount: 0.25 });
+  const reduced = useReducedMotion();
+  const paused = hovered || focused || dragging || hidden || stopped || reduced || !inView;
+  const project = PROJECTS_DATA[index];
+  const go = (next, dir) => { setDirection(dir); setIndex((next + PROJECTS_DATA.length) % PROJECTS_DATA.length); setInteraction(value => value + 1); };
+  useEffect(() => {
+    const change = () => setHidden(document.hidden);
+    document.addEventListener('visibilitychange', change);
+    return () => document.removeEventListener('visibilitychange', change);
+  }, []);
+  useEffect(() => {
+    if (paused) return;
+    const timer = setTimeout(() => { setDirection(1); setIndex(value => (value + 1) % PROJECTS_DATA.length); }, 3000);
+    return () => clearTimeout(timer);
+  }, [index, paused, interaction]);
+  return <section id="projects" className="section projects-section"><div className="section-inner">
+    <SectionHeading number="03" label="SELECTED WORK / IDEAS INTO SOFTWARE" title="PROJECTS." note="built this ↓" />
+    <div ref={region} className="project-carousel" role="region" aria-roledescription="carousel" aria-label="Selected projects" tabIndex={0}
+      onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocusCapture={() => setFocused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}
+      onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); go(index + (event.key === 'ArrowRight' ? 1 : -1), event.key === 'ArrowRight' ? 1 : -1); } }}>
+      <div className="project-chrome"><span className="window-dots" aria-hidden="true"><i /><i /><i /></span><span>SELECTED_WORK / {String(index + 1).padStart(2,'0')}</span><span>{String(PROJECTS_DATA.length).padStart(2,'0')} PROJECTS</span></div>
+      <div className="project-stage" aria-live={paused ? 'polite' : 'off'}>
+        <AnimatePresence mode="wait" initial={false} custom={direction}>
+          <motion.article key={project.id} className="project-slide" role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${PROJECTS_DATA.length}: ${project.title}`}
+            custom={direction} variants={{ enter: dir => ({ opacity: 0, x: reduced ? 0 : dir * 24 }), center: { opacity: 1, x: 0 }, exit: dir => ({ opacity: 0, x: reduced ? 0 : -dir * 24 }) }} initial="enter" animate="center" exit="exit" transition={{ duration: reduced ? 0 : 0.2 }}
+            drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={reduced ? 0 : 0.08} dragMomentum={false}
+            onDragStart={() => setDragging(true)} onDragEnd={(_, info) => { if (Math.abs(info.offset.x) > 45) go(index + (info.offset.x < 0 ? 1 : -1), info.offset.x < 0 ? 1 : -1); else setInteraction(value => value + 1); setDragging(false); }}>
+            <div className="project-copy"><span className="eyebrow">{project.category}</span><h3>{project.title}</h3><p>{project.description}</p><div className="project-tech"><span className="eyebrow">BUILT WITH</span><p>{project.tech.join(' / ')}</p></div><div className="project-links">
+              {project.demoUrl && <a className="button-solid" href={project.demoUrl} target="_blank" rel="noreferrer" draggable="false">View project <ArrowUpRight size={17} /></a>}
+              {project.githubUrl && <a className="text-link" href={project.githubUrl} target="_blank" rel="noreferrer" draggable="false">GitHub <ArrowUpRight size={17} /></a>}
+              {!project.demoUrl && !project.githubUrl && <span className="eyebrow">DEMO NOT PUBLISHED</span>}
+            </div></div>
+            <figure className="project-figure"><div className="project-image">
+              {project.image ? <img src={project.image} alt={`${project.title} project preview`} loading="lazy" decoding="async" draggable="false" /> : <div className="triage-preview"><span className="eyebrow">MEDIQUICK / CARE, CONNECTED.</span><div className="triage-title">A shorter path<br />to better care.</div><div className="triage-flow"><span>Patient</span><span>→</span><span>Doctor</span><span>→</span><span>Pharmacy</span></div><span className="eyebrow">APPOINTMENTS · TELECONSULTATION · RECORDS</span></div>}
+            </div><figcaption><span>{project.annotation}</span><span aria-hidden="true">↗</span></figcaption></figure>
+          </motion.article>
+        </AnimatePresence>
       </div>
-    </section>
-  );
+      <div className="carousel-controls"><div className="carousel-pages">{PROJECTS_DATA.map((item,i) => <button key={item.id} onClick={() => go(i, i > index ? 1 : -1)} aria-label={`Show project ${i + 1}: ${item.title}`} aria-current={i === index ? 'true' : undefined}><span>{String(i + 1).padStart(2,'0')}</span>{i === index && <span className="page-progress"><span key={`${index}-${interaction}-${paused}`} className={paused ? 'is-paused' : ''} /></span>}</button>)}</div><div className="carousel-buttons">
+        {!reduced && <button className="icon-button pause-button" onClick={() => setStopped(!stopped)} aria-label={stopped ? 'Play slideshow' : 'Pause slideshow'}>{stopped ? <Play size={15} /> : <Pause size={15} />}</button>}
+        <button className="icon-button" onClick={() => go(index - 1, -1)} aria-label="Previous project"><ArrowLeft size={20} /></button><button className="icon-button" onClick={() => go(index + 1, 1)} aria-label="Next project"><ArrowRight size={20} /></button>
+      </div></div>
+    </div>
+    <div className="section-end"><span>{paused ? 'TAKE YOUR TIME.' : 'A NEW PROJECT EVERY 3 SECONDS.'}</span><span>DRAG, SWIPE, OR USE THE ARROWS ↔</span></div>
+  </div></section>;
 }

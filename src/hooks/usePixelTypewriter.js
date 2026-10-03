@@ -47,11 +47,10 @@ export function usePixelTypewriter(text, speed = 50, startDelay = 0, startImmedi
 export function useMultiLineTypewriter(lines, speed = 40, lineDelay = 300) {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [displayLines, setDisplayLines] = useState([]);
-  const [isComplete, setIsComplete] = useState(false);
+  const isComplete = currentLineIndex >= lines.length;
 
   useEffect(() => {
     if (currentLineIndex >= lines.length) {
-      setIsComplete(true);
       return;
     }
 

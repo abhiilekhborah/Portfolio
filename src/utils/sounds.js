@@ -17,7 +17,7 @@ export function playBeep(frequency = 440, duration = 80, volume = 0.1) {
     oscillator.stop(ctx.currentTime + duration / 1000);
 
     setTimeout(() => ctx.close(), duration + 100);
-  } catch (e) {
+  } catch {
     // Silently fail if audio not available
   }
 }
@@ -47,7 +47,7 @@ export function playCoinSound() {
     osc.start(ctx.currentTime);
     osc.stop(ctx.currentTime + 0.3);
     setTimeout(() => ctx.close(), 400);
-  } catch (e) {}
+  } catch { /* Audio is optional. */ }
 }
 
 export function playAchievementSound() {
@@ -67,7 +67,7 @@ export function playAchievementSound() {
       osc.stop(ctx.currentTime + i * 0.12 + 0.2);
     });
     setTimeout(() => ctx.close(), 800);
-  } catch (e) {}
+  } catch { /* Audio is optional. */ }
 }
 
 export function playStartSound() {
@@ -92,5 +92,5 @@ export function playStartSound() {
       osc.stop(startTime + duration);
     });
     setTimeout(() => ctx.close(), 1000);
-  } catch (e) {}
+  } catch { /* Audio is optional. */ }
 }

@@ -1,0 +1,35 @@
+# Redesign verification
+
+## Passed
+- Production build and ESLint.
+- Live LeetCode solved counts and contest data; Codeforces profile and submission-derived solved counts. Observed 913 LeetCode / 219 Codeforces solved during verification.
+- API outage simulation: uncached data shows unavailable/dashes; cached responses remain explicitly labeled as saved data.
+- Original Yojana and Arim demo destinations return HTTP 200 and the expected Google Drive video titles. Existing GitHub destination returns HTTP 200.
+- First visit uses original GIF in a viewport-height section with no modal and no scroll lock. Finished artwork settles on its poster; navigation/revisit within the session uses the poster immediately.
+- Exactly one project article; next/previous, direct selection, arrow keys, horizontal dragging at mobile width.
+- Timed carousel observation: same slide through 2561 ms, next slide at 3077 ms. Manual interaction resets timer; hover/focus/drag pause logic retained.
+- Hidden-tab event simulation pauses for over 3 seconds and resumes afterward.
+- Reduced-motion media-query simulation: poster artwork, static full SVG path, no automatic carousel advance after 3500 ms, no reveal transforms. CSS reduced-motion rules inspected.
+- Scroll-linked path increases down-page (0.38 to 0.78) and retracts when scrolling upward (0.49); dimensions measured from actual section layout.
+- All eight actual sketches; lazy-loaded WebP gallery previews and full-resolution originals in modal.
+- Sketch viewer: previous/next, arrow keys, Escape, native modal focus containment, focus restoration, horizontal pointer drag at mobile width.
+- Desktop, 820px tablet, 390px mobile, and 320px narrow viewport checks: no horizontal overflow.
+- Browser console: no application warnings/errors in the tested portfolio flow.
+
+## External limitation
+The retained Piston compiler service at emkc.org/api/v2/piston/execute responds HTTP 401. Its route, editor, language selection, copy/reset controls, and request integration remain; service authorization requires separate backend/service configuration. No credentials are embedded in the frontend. The UI explains the execution failure.
+
+## Notes
+- Hidden-state, API outage, and reduced-motion simulations used a temporary local qa.html test harness, removed before delivery.
+- Mobile gesture checks used pointer dragging at mobile viewport dimensions; physical iOS/Android device testing was not performed.
+- No deployment or Git commit was made.
+
+## Hero quality update
+
+The supplied 960 × 540 GIF is preserved. The rendered animation uses a 1920 × 1080 WebP export with Lanczos resampling and mild edge sharpening; the held poster uses lossless WebP. The animation stops at the completed artwork before the original fade to blank. This improves display interpolation without claiming new detail beyond the source. Desktop rendering verified at 1440 × 810.
+
+## Scroll thread correction
+
+Replaced abrupt section joins with curved transitions through section padding. Mobile now alternates sides instead of using a straight left rail. Added a moving tip and spring smoothing; scroll reversal retracts the same path. Loop progression is strictly monotonic, and the final curl completes gradually rather than jumping at the bottom. Geometry uses actual content gutters and refreshes on font loading/resizing without mutating the shared scroll value. Verified desktop drawing progression (0.1907 → 0.3133) and reversal (0.2166), mobile at 390px, the sketch loop, contact clearance, and no horizontal overflow. Reduced motion shows the complete static line without its animated tip.
+
+Horizontal scrolling was reverted at the user’s request. The vertical layout, scroll thread, gallery arrangement, and navigation are restored; the improved hero assets are retained.
