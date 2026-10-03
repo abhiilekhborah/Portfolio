@@ -45,3 +45,7 @@ The line now curls around each sticker’s outer edge instead of crossing its ce
 ## Interactive stickers
 
 All five stickers are accessible buttons with a pop-out hover/focus effect and Click me cue; touch layouts keep the cue visible. Camera opens the supplied Fuji frame with a shutter flash, developing portfolio portrait, and Capture again replay. Film opens Rehearse with me and the corrected Sholay dialogue with a repeatable take. Other stickers show their existing caption. Native dialogs contain focus, close on Escape/backdrop/close button, restore focus, and restore page scrolling. Camera and film replay, keyboard activation, Escape, focus restoration, and centered 320px mobile layout verified. Reduced-motion CSS disables flash and entrance/develop animations.
+
+## Raccoon facts and bulb night mode
+
+Raccoon opens the user-supplied two paragraphs with bold/italic emphasis; the stray svg token was removed. Bulb toggles a dark viewport overlay with a warm pool of light anchored to its measured position, the supplied Light in the night JPEG animated with CSS, and an accessible lights-on control. No bulb GIF was present in the source folder. Scroll/resize tracking, Escape cleanup, repeat toggling, lights-on restoration, and 320px layout with no horizontal overflow verified. Reduced motion disables sway, glow pulsing, and fades.

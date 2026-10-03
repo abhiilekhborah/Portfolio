@@ -296,3 +296,22 @@ a:hover svg { transform: translate(2px,-2px); }
 @media (hover: none) { .sticker-click-hint { opacity: 1; font-size: 17px; } }
 @media (max-width: 760px) { .sticker-moment-sheet { padding: 18px 18px 26px; }.camera-dialog .film-snapshot { max-width: 380px; } }
 @media (prefers-reduced-motion: reduce) { .floating-sticker-button:hover,.floating-sticker-button:focus-visible { transform: none; }.capture-flash { display: none; }.film-snapshot { animation: none; transform: rotate(-2deg); }.film-exposure img,.rehearsal-line { animation: none; } }
+
+.raccoon-facts { text-align: left; font-size: clamp(14px,2vw,16px); line-height: 1.8; max-width: 510px; margin: 20px auto 0; }
+.raccoon-facts p + p { margin-top: 18px; }
+.raccoon-facts strong { font-weight: 650; }
+.bulb-is-on .floating-sticker-button img { visibility: hidden; }
+.bulb-night { position: fixed; inset: 0; z-index: 1000; pointer-events: none; --lamp-x: 50vw; --lamp-y: 50vh; --light-radius: clamp(220px,32vw,420px); }
+.night-shade { position: absolute; inset: 0; background: radial-gradient(circle var(--light-radius) at var(--lamp-x) var(--lamp-y), transparent 12%,rgba(7,8,6,.14) 35%,rgba(7,8,6,.72) 72%,rgba(7,8,6,.96) 100%); animation: night-fall .7s ease both; }
+.lamp-warmth { position: absolute; inset: 0; background: radial-gradient(circle var(--light-radius) at var(--lamp-x) var(--lamp-y),#fff8ab40 0%,#e9b64d24 40%,transparent 76%); animation: lamp-glow 4s ease-in-out infinite; }
+.night-lamp { position: fixed; z-index: 1001; pointer-events: none; width: 200px; height: 400px; max-width: none; left: calc(var(--lamp-x) - 94px); top: calc(var(--lamp-y) - 90px); mix-blend-mode: screen; mask-image: linear-gradient(#000 0%,#000 32%,transparent 50%); object-fit: contain; transform-origin: 50% 0; animation: lamp-light-up .9s ease both, lamp-sway 6s ease-in-out .9s infinite; }
+.night-controls { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; color: #fff6cf; max-width: calc(100vw - 48px); }
+.night-controls .annotation { font-size: 25px; text-align: right; }
+.lights-on { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border: 1px solid #fff6cf70; border-radius: 999px; background: #242419; color: #fff6cf; pointer-events: auto; cursor: pointer; font-size: 13px; }
+.lights-on:hover,.lights-on:focus-visible { background: #fff6cf; color: #242419; }
+@keyframes night-fall { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lamp-light-up { from { opacity: 0; filter: brightness(.3); } to { opacity: 1; filter: brightness(1); } }
+@keyframes lamp-glow { 0%,100% { opacity: .7; } 50% { opacity: 1; } }
+@keyframes lamp-sway { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+@media (max-width: 760px) { .night-lamp { width: 160px; height: 320px; left: calc(var(--lamp-x) - 75px); top: calc(var(--lamp-y) - 72px); }.night-controls { right: 16px; bottom: 18px; max-width: calc(100vw - 32px); }.night-controls .annotation { font-size: 22px; } }
+@media (prefers-reduced-motion: reduce) { .night-shade,.lamp-warmth,.night-lamp { animation: none; } }

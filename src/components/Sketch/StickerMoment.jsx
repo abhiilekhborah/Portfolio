@@ -8,6 +8,7 @@ export default function StickerMoment({ type, caption, onClose }) {
   const [take, setTake] = useState(1);
   const camera = type === 'camera';
   const movie = type === 'movie';
+  const raccoon = type === 'raccoon';
   useEffect(() => {
     const previous = document.activeElement;
     const overflow = document.body.style.overflow;
@@ -36,6 +37,13 @@ export default function StickerMoment({ type, caption, onClose }) {
         <blockquote className="rehearsal-line" key={take}>Basanti, in kutton ke saamne mat naachna!</blockquote>
         <p className="eyebrow">SHOLAY · YOUR TURN, MAKE IT DRAMATIC.</p>
         <button className="sticker-replay" onClick={() => setTake(value => value + 1)}><RotateCcw size={15} /> One more take</button>
+      </> : raccoon ? <>
+        <img className="moment-mini-sticker" src={`${BASE}floating-elements/raccoon.jpg`} alt="Raccoon wearing sunglasses" width="600" height="600" />
+        <h2 id="sticker-moment-title">A clever little creature</h2>
+        <div className="raccoon-facts">
+          <p>Raccoons are <strong>highly intelligent</strong> animals with a working memory that can retain solutions to complex tasks for up to <strong>three years</strong>, a cognitive ability comparable to that of young children.</p>
+          <p>Their name derives from the Powhatan word <em>aroughcun</em>, meaning <strong>“animal that scratches with its hands,”</strong> reflecting their human-like, dexterous front paws which contain sensory receptors four times more dense than their back paws.</p>
+        </div>
       </> : <>
         <img className="moment-mini-sticker" src={`${BASE}floating-elements/${type}.jpg`} alt="" width="736" height="736" />
         <h2 id="sticker-moment-title" className="annotation">{caption}</h2>
