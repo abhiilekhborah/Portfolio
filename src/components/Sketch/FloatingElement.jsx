@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import StickerMoment from './StickerMoment';
 import BulbNight from './BulbNight';
 import LaptopTyping from './LaptopTyping';
@@ -13,10 +13,23 @@ const ELEMENTS = {
   raccoon: { caption: 'As cool as the rackoon', alt: 'Raccoon wearing sunglasses with its paws raised', rotation: -5 },
 };
 export default function FloatingElement({ type, side = 'left' }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const base = import.meta.env.BASE_URL;
+    const files = type === 'raccoon' ? ['raccoon-crossing-v2.webm'] : type === 'bulb' ? ['bulb-glow.webm'] : type === 'laptop' ? Array.from({ length: 8 }, (_, index) => `typing/typing_${String(index).padStart(2, '0')}.webp`) : [];
+    if (!files.length) return;
+    const observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      files.forEach(file => { fetch(`${base}floating-elements/${file}`, { priority: 'low', cache: 'force-cache' }).catch(() => {}); });
+      observer.disconnect();
+    }, { rootMargin: '600px' });
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [type]);
   const element = ELEMENTS[type];
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
-  return <div className={`floating-interlude floating-${side}${type === 'bulb' && open ? ' bulb-is-on' : ''}`} id={`floating-${type}`}>
+  return <div ref={ref} className={`floating-interlude floating-${side}${type === 'bulb' && open ? ' bulb-is-on' : ''}`} id={`floating-${type}`}>
     <div className="section-inner">
       <figure className="floating-piece">
         <div className="floating-sticker-anchor" data-thread-anchor>

@@ -25,7 +25,7 @@ export default function RaccoonCrossing({ onClose }) {
     return () => { cancelAnimationFrame(frame); window.removeEventListener('keydown', escape); };
   }, [onClose, reduced]);
   return createPortal(<div className="raccoon-crossing-scene">
-    <div ref={traveller} className="raccoon-traveller"><video ref={video} className="raccoon-crossing-video" src={`${import.meta.env.BASE_URL}floating-elements/raccoon-crossing.webm`} autoPlay muted playsInline onLoadedData={event => { event.currentTarget.play().catch(() => setPaused(true)); }} preload="auto" onEnded={onClose} onPause={() => setPaused(true)} onPlay={() => setPaused(false)} aria-label="Raccoon walking across the portfolio" width="1280" height="720" /></div>
+    <div ref={traveller} className="raccoon-traveller"><video ref={video} className="raccoon-crossing-video" src={`${import.meta.env.BASE_URL}floating-elements/raccoon-crossing-v2.webm`} autoPlay muted playsInline onLoadedData={event => { event.currentTarget.play().catch(() => setPaused(true)); }} preload="auto" onEnded={onClose} onPause={() => setPaused(true)} onPlay={() => setPaused(false)} aria-label="Raccoon walking across the portfolio" width="960" height="534" /></div>
     <button className="icon-button raccoon-crossing-pause" aria-label={paused ? 'Play raccoon animation' : 'Pause raccoon animation'} onClick={() => { const media = video.current; if (media.paused) media.play().catch(() => setPaused(true)); else media.pause(); }}>{paused ? <Play size={20} /> : <Pause size={20} />}</button>
     <button className="icon-button raccoon-crossing-close" aria-label="Close raccoon animation" onClick={onClose}><X size={22} /></button>
   </div>, document.body);
