@@ -366,3 +366,13 @@ a:hover svg { transform: translate(2px,-2px); }
 
 .laptop-typing-scene.typing-finished { animation: typing-scene-exit .25s ease-out forwards; }
 @keyframes typing-scene-exit { from { opacity: 1; } to { opacity: 0; } }
+
+.raccoon-crossing-scene { position: fixed; inset: 0; z-index: 950; overflow: hidden; pointer-events: none; }
+.raccoon-crossing-video { display: block; width: 100%; height: auto; }
+.raccoon-crossing-close { position: absolute; top: 86px; right: 24px; pointer-events: auto; }
+@media (max-width: 760px) { .raccoon-crossing-close { top: 72px; right: 16px; } }
+
+.raccoon-crossing-pause { position: absolute; top: 86px; right: 78px; pointer-events: auto; }
+@media (max-width: 760px) { .raccoon-crossing-pause { top: 72px; right: 70px; } }
+
+.raccoon-traveller { position: absolute; bottom: 16px; left: 0; width: min(560px,90vw); aspect-ratio: 16 / 9; transform: translateX(-100%); will-change: transform; }
