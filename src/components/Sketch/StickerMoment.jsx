@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, RotateCcw } from 'lucide-react';
 
+import VoiceoverVideo from './VoiceoverVideo';
+
 const BASE = import.meta.env.BASE_URL;
 export default function StickerMoment({ type, caption, onClose }) {
   const dialog = useRef(null);
@@ -31,13 +33,7 @@ export default function StickerMoment({ type, caption, onClose }) {
         <h2 id="sticker-moment-title">Capture the good moments.</h2>
         <p className="annotation">One for the scrapbook.</p>
         <button className="sticker-replay" onClick={() => setTake(value => value + 1)}><RotateCcw size={15} /> Capture again</button>
-      </> : movie ? <>
-        <img className="moment-mini-sticker" src={`${BASE}floating-elements/movie.jpg`} alt="Movie clapperboard" width="600" height="600" />
-        <h2 id="sticker-moment-title">Rehearse with me</h2>
-        <blockquote className="rehearsal-line" key={take}>Basanti, in kutton ke saamne mat naachna!</blockquote>
-        <p className="eyebrow">SHOLAY · YOUR TURN, MAKE IT DRAMATIC.</p>
-        <button className="sticker-replay" onClick={() => setTake(value => value + 1)}><RotateCcw size={15} /> One more take</button>
-      </> : raccoon ? <>
+      </> : movie ? <VoiceoverVideo /> : raccoon ? <>
         <img className="moment-mini-sticker" src={`${BASE}floating-elements/raccoon.jpg`} alt="Raccoon wearing sunglasses" width="600" height="600" />
         <h2 id="sticker-moment-title">A clever little creature</h2>
         <div className="raccoon-facts">

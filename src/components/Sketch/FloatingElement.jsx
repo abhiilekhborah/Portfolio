@@ -16,7 +16,7 @@ export default function FloatingElement({ type, side = 'left' }) {
   const ref = useRef(null);
   useEffect(() => {
     const base = import.meta.env.BASE_URL;
-    const files = type === 'raccoon' ? ['raccoon-crossing-v2.webm'] : type === 'bulb' ? ['bulb-glow.webm'] : type === 'laptop' ? Array.from({ length: 8 }, (_, index) => `typing/typing_${String(index).padStart(2, '0')}.webp`) : [];
+    const files = type === 'movie' ? ['voiceover.mp4'] : type === 'raccoon' ? ['raccoon-crossing-v2.webm'] : type === 'bulb' ? ['bulb-glow.webm'] : type === 'laptop' ? Array.from({ length: 8 }, (_, index) => `typing/typing_${String(index).padStart(2, '0')}.webp`) : [];
     if (!files.length) return;
     const observer = new IntersectionObserver(entries => {
       if (!entries.some(entry => entry.isIntersecting)) return;
