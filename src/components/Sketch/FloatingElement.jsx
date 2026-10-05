@@ -16,7 +16,7 @@ export default function FloatingElement({ type, side = 'left' }) {
   const ref = useRef(null);
   useEffect(() => {
     const base = import.meta.env.BASE_URL;
-    const files = type === 'movie' ? ['voiceover.mp4'] : type === 'raccoon' ? ['raccoon-crossing-v2.webm'] : type === 'bulb' ? ['bulb-glow.webm'] : type === 'laptop' ? Array.from({ length: 8 }, (_, index) => `typing/typing_${String(index).padStart(2, '0')}.webp`) : [];
+    const files = type === 'movie' ? ['voiceover.mp4'] : type === 'raccoon' ? ['raccoon-frames.webp'] : type === 'bulb' ? ['bulb-glow.webm'] : type === 'laptop' ? Array.from({ length: 8 }, (_, index) => `typing/typing_${String(index).padStart(2, '0')}.webp`) : [];
     if (!files.length) return;
     const observer = new IntersectionObserver(entries => {
       if (!entries.some(entry => entry.isIntersecting)) return;
@@ -34,7 +34,7 @@ export default function FloatingElement({ type, side = 'left' }) {
       <figure className="floating-piece">
         <div className="floating-sticker-anchor" data-thread-anchor>
           <button className="floating-sticker-button" onClick={() => setOpen(value => ['bulb', 'laptop', 'raccoon'].includes(type) ? !value : true)} aria-pressed={['bulb', 'laptop', 'raccoon'].includes(type) ? open : undefined} aria-label={`Click me: ${element.caption}`} aria-haspopup={['bulb', 'laptop', 'raccoon'].includes(type) ? undefined : 'dialog'}>
-          <motion.img src={`${import.meta.env.BASE_URL}floating-elements/${type}.jpg`} alt={element.alt} width="736" height="736" loading="lazy" decoding="async"
+          <motion.img src={`${import.meta.env.BASE_URL}floating-elements/${type}.webp`} alt={element.alt} width="736" height="736" loading="eager" fetchPriority="low" decoding="async"
             initial={false} animate={reduced ? { y: 0, rotate: element.rotation } : { y: [0, -9, 0], rotate: [element.rotation, element.rotation + 2, element.rotation] }}
             transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }} />
           <span className="sticker-click-hint" aria-hidden="true">{type === 'bulb' && open ? 'Lights on ↗' : 'Click me ↗'}</span>
