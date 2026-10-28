@@ -384,3 +384,19 @@ a:hover svg { transform: translate(2px,-2px); }
 .voiceover-count { min-height: 40px; }
 
 .raccoon-loading { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--color-paper); padding: 8px 16px; text-align: center; }
+
+/* Phone layouts favor readable copy and comfortable touch targets. */
+@media (max-width: 760px) {
+  .section-inner { width: calc(100% - 40px); }
+  .project-slide { min-height: 0; gap: 24px; }
+  .project-copy > p,.body-copy { font-size: 14px; line-height: 1.75; }
+  .project-copy h3 { font-size: clamp(32px,9vw,47px); }
+  .carousel-controls { flex-wrap: wrap; justify-content: space-between; }
+  .carousel-pages button,.carousel-buttons .icon-button,.carousel-buttons .pause-button { min-width: 44px; min-height: 44px; }
+  .carousel-pages { gap: 0; }
+  .project-links a { min-height: 44px; display: inline-flex; align-items: center; }
+  .site-header { padding-inline: 20px; }
+  .sticker-dialog { max-height: calc(100dvh - 24px); }
+  .typing-close,.raccoon-crossing-close,.raccoon-crossing-pause { min-width: 44px; min-height: 44px; }
+  .paper-grain { display: none; }
+}

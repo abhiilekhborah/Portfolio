@@ -138,7 +138,7 @@ export default function ScrollThread({ target }) {
   }, [target]);
   useLayoutEffect(() => {
     if (!pathRef.current || !geometry.d) return;
-    const count = 1600, length = pathRef.current.getTotalLength();
+    const count = window.matchMedia('(max-width: 760px)').matches ? 600 : 1600, length = pathRef.current.getTotalLength();
     let highest = 0;
     const raw = Array.from({ length: count + 1 }, (_, i) => {
       const point = pathRef.current.getPointAtLength(length * i / count);

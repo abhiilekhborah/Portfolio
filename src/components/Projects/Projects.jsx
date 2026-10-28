@@ -10,7 +10,7 @@ export default function Projects() {
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const [stopped, setStopped] = useState(false);
+  const [stopped, setStopped] = useState(() => window.matchMedia('(pointer: coarse)').matches);
   const [hidden, setHidden] = useState(document.hidden);
   const [interaction, setInteraction] = useState(0);
   const region = useRef(null);
