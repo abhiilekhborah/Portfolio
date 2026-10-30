@@ -1,0 +1,17 @@
+{
+  "note": "Reconstructed isolated GIF intro on localhost; not a historical production measurement.",
+  "viewport": [
+    390,
+    844
+  ],
+  "paint": [
+    {
+      "name": "first-paint",
+      "time": 24
+    },
+    {
+      "name": "first-contentful-paint",
+      "time": 64
+    }
+  ]
+}

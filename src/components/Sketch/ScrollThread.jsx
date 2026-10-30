@@ -137,7 +137,7 @@ export default function ScrollThread({ target }) {
     return () => { disposed = true; observer.disconnect(); cancelAnimationFrame(frame); window.removeEventListener('resize', schedule); };
   }, [target]);
   useLayoutEffect(() => {
-    if (!pathRef.current || !geometry.d) return;
+    if (reduced || !pathRef.current || !geometry.d) return;
     const count = window.matchMedia('(max-width: 760px)').matches ? 600 : 1600, length = pathRef.current.getTotalLength();
     let highest = 0;
     const raw = Array.from({ length: count + 1 }, (_, i) => {
@@ -151,7 +151,7 @@ export default function ScrollThread({ target }) {
     samples.current = raw.map((point, i) => ({ ...point, y: point.frontier * 0.88 + extent * (i / count) * 0.12 }));
     revision.set(revision.get() + 1);
     ink.jump(progress.get());
-  }, [geometry, revision, ink, progress]);
+  }, [geometry, revision, ink, progress, reduced]);
   return <svg className="scroll-thread" width={geometry.width} height={geometry.height} viewBox={`0 0 ${geometry.width} ${geometry.height}`} aria-hidden="true" focusable="false">
     <motion.path ref={pathRef} d={geometry.d} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ pathLength: reduced ? 1 : ink }} />
     {!reduced && <motion.circle r="2.8" fill="currentColor" style={{ cx: tipX, cy: tipY, opacity: tipOpacity }} />}

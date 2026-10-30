@@ -1,0 +1,154 @@
+[
+  {
+    "viewport": [
+      360,
+      640
+    ],
+    "overflow": false,
+    "stage": {
+      "x": 0,
+      "y": 218.75,
+      "width": 360,
+      "height": 202.5,
+      "top": 218.75,
+      "right": 360,
+      "bottom": 421.25,
+      "left": 0
+    },
+    "paint": [
+      {
+        "name": "first-paint",
+        "time": 96
+      },
+      {
+        "name": "first-contentful-paint",
+        "time": 180
+      }
+    ],
+    "errors": []
+  },
+  {
+    "viewport": [
+      390,
+      844
+    ],
+    "overflow": false,
+    "stage": {
+      "x": 0,
+      "y": 312.3125,
+      "width": 390,
+      "height": 219.375,
+      "top": 312.3125,
+      "right": 390,
+      "bottom": 531.6875,
+      "left": 0
+    },
+    "paint": [
+      {
+        "name": "first-paint",
+        "time": 32
+      },
+      {
+        "name": "first-contentful-paint",
+        "time": 92
+      }
+    ],
+    "errors": []
+  },
+  {
+    "viewport": [
+      768,
+      1024
+    ],
+    "overflow": false,
+    "stage": {
+      "x": 0,
+      "y": 296,
+      "width": 768,
+      "height": 432,
+      "top": 296,
+      "right": 768,
+      "bottom": 728,
+      "left": 0
+    },
+    "paint": [
+      {
+        "name": "first-paint",
+        "time": 48
+      },
+      {
+        "name": "first-contentful-paint",
+        "time": 88
+      }
+    ],
+    "errors": []
+  },
+  {
+    "viewport": [
+      1440,
+      900
+    ],
+    "overflow": false,
+    "stage": {
+      "x": 0,
+      "y": 45,
+      "width": 1440,
+      "height": 810,
+      "top": 45,
+      "right": 1440,
+      "bottom": 855,
+      "left": 0
+    },
+    "paint": [
+      {
+        "name": "first-paint",
+        "time": 24
+      },
+      {
+        "name": "first-contentful-paint",
+        "time": 96
+      }
+    ],
+    "errors": []
+  },
+  {
+    "viewport": [
+      960,
+      540
+    ],
+    "overflow": false,
+    "stage": {
+      "x": 0,
+      "y": 0,
+      "width": 960,
+      "height": 540,
+      "top": 0,
+      "right": 960,
+      "bottom": 540,
+      "left": 0
+    },
+    "paint": [
+      {
+        "name": "first-paint",
+        "time": 44
+      },
+      {
+        "name": "first-contentful-paint",
+        "time": 116
+      }
+    ],
+    "errors": []
+  },
+  {
+    "reducedMotion": "no-preference",
+    "removedAfterMs": 5781.800000190735,
+    "repeatLoader": 0,
+    "scrollOverflow": ""
+  },
+  {
+    "reducedMotion": "reduce",
+    "removedAfterMs": 752.9000000953674,
+    "repeatLoader": 0,
+    "scrollOverflow": ""
+  }
+]
